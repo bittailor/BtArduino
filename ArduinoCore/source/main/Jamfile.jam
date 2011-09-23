@@ -1,0 +1,13 @@
+
+project ArduinoCore/main 
+	: source-location src	 
+	: requirements <include>inc <include>src
+	: usage-requirements <include>inc 
+	;
+
+excludes = DigitalOutput.cpp , Colorduino.cpp ;
+
+echo [ glob-tree *.cpp : $(excludes)  ] ;
+
+lib ArduinoCore : [ glob-tree *.cpp : $(excludes)  ]                                      :              :              ;
+# lib ArduinoCore : [ glob-tree *.cpp                ] /ArduinoLibrary/main//ArduinoLibrary : <toolset>avr : <link>static     ;

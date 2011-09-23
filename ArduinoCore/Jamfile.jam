@@ -1,0 +1,9 @@
+
+project ArduinoCore 
+	: build-dir target 
+	: 
+	;
+
+use-project /ArduinoCore/main : source/main ;
+
+build-project source/main ;
