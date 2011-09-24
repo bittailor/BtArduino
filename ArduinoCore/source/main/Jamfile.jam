@@ -9,5 +9,5 @@ excludes = DigitalOutput.cpp , Colorduino.cpp ;
 
 echo [ glob-tree *.cpp : $(excludes)  ] ;
 
-lib ArduinoCore : [ glob-tree *.cpp : $(excludes)  ]                                      :              :              ;
-# lib ArduinoCore : [ glob-tree *.cpp                ] /ArduinoLibrary/main//ArduinoLibrary : <toolset>avr : <link>static     ;
+lib ArduinoCore : [ glob-tree *.cpp : $(excludes)  ]                                      :              :                  ;
+lib ArduinoCore : [ glob-tree *.cpp                ] /ArduinoLibrary/main//ArduinoLibrary : <toolset>avr :                  ;

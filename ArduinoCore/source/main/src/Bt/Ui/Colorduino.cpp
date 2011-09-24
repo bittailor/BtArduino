@@ -53,7 +53,7 @@ namespace Bt {
 namespace Ui {
 
 inline void timer2Callback() {
-   Bt::Util::Singleton<Bt::Ui::Colorduino>::getInstance()->workcycle();
+   Bt::Util::Singleton<Bt::Ui::Colorduino>::instance()->workcycle();
 }
 
 void ledDelay(unsigned char i)

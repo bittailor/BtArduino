@@ -1,0 +1,17 @@
+import testing ;
+
+project ArduinoCore/test 
+	: source-location src	 
+	: requirements <include>inc <include>src
+	: 
+	;
+
+
+unit-test ArduinoCoreUnittest : 
+    [ glob-tree *.cpp ] 
+    /ArduinoCore/main//ArduinoCore
+    /Arduino//gtest ;
+alias ArduinoCoreUnittest :                                                    
+     : 
+     <toolset>avr ;
+    

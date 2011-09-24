@@ -19,7 +19,11 @@ class Singleton
 {
    public:
 
-      static T* getInstance() {
+      static bool valid() {
+         return mInstance != 0 ;
+      }
+
+      static T* instance() {
          return mInstance;
       }
 
