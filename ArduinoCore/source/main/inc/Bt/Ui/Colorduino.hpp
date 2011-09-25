@@ -14,13 +14,13 @@
 #include <Bt/Util/Singleton.hpp>
 #include <Bt/Util/TemplateMatrix.hpp>
 
-#include "I_RgbMatrix.hpp"
+#include "I_RgbScreen.hpp"
 
 
 namespace Bt {
 namespace Ui {
 
-class Colorduino : public I_RgbMatrix
+class Colorduino : public I_RgbScreen
 {
    public:
       enum {

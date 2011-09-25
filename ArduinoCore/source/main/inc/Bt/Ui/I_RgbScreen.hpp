@@ -4,12 +4,12 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-//  Bt::Ui::I_RgbMatrix
+//  Bt::Ui::I_RgbScreen
 //  
 //*************************************************************************************************
 
 #ifndef INC__Bt_Ui_I_RggMatrix__hpp
-#define INC__Bt_Ui_I_RgbMatrix__hpp
+#define INC__Bt_Ui_I_RgbScreen__hpp
 
 #include <stdint.h>
 
@@ -19,9 +19,9 @@
 namespace Bt {
 namespace Ui {
 
-class I_RgbMatrix {
+class I_RgbScreen {
    public:
-      virtual ~I_RgbMatrix() {}
+      virtual ~I_RgbScreen() {}
       
       /**
        * Sets the color of a pixel in the matrix.
@@ -46,4 +46,4 @@ class I_RgbMatrix {
 } // namespace Ui
 } // namespace Bt
 
-#endif // INC__Bt_Ui_I_RgbMatrix__hpp
+#endif // INC__Bt_Ui_I_RgbScreen__hpp
