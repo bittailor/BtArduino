@@ -26,11 +26,13 @@ class Colorduino : public I_RgbScreen
       enum {
          WIDTH = 8,
          HEIGHT = 8,
-         BITS_PER_COLOR = 8
+         BITS_PER_BYTE = 8
       };
 
-      Colorduino();
+      explicit Colorduino(Color iWhiteBalance = Color(34,60,63));
       ~Colorduino();
+
+      void setWhiteBalance(Color iColor);
 
       virtual void setPixel(uint8_t iX, uint8_t iY, Color iColor) ;
       virtual void fill(Color iColor) ;
@@ -51,10 +53,12 @@ class Colorduino : public I_RgbScreen
 
       void workcycle();
 
-      void writeCurrentLine();
       void openCurrentLine();
+      void writeCurrentLine();
       void incrementCurrentLine();
-      void shiftOut(uint8_t iOneColor);
+
+      void shiftOut(uint8_t iOneColor, uint8_t numberOfBits = BITS_PER_BYTE);
+      void shiftOut(const Color& iColor, uint8_t numberOfBits = BITS_PER_BYTE);
 
 
       typedef Color ScreenBuffer[8][8];

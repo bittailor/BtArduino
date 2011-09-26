@@ -8,7 +8,7 @@
 //  
 //*************************************************************************************************
 
-#ifndef INC__Bt_Ui_I_RggMatrix__hpp
+#ifndef INC__Bt_Ui_I_RgbScreen__hpp
 #define INC__Bt_Ui_I_RgbScreen__hpp
 
 #include <stdint.h>
@@ -35,7 +35,7 @@ class I_RgbScreen {
        * Fills the hole matrix with a color;
        * @param iColor the color
        */
-      virtual void fill(Color iColor ) = 0;
+      virtual void fill(Color iColor) = 0;
 
       /**
        * Sends the buffer to the screen.

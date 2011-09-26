@@ -43,8 +43,8 @@
 #define LED_SCL_CLR SCL&=~SCL_BIT
 #define LED_LAT_SET LAT|=LAT_BIT
 #define LED_LAT_CLR LAT&=~LAT_BIT
-#define LED_SLB_SET SLB|=SLB_BIT
-#define LED_SLB_CLR SLB&=~SLB_BIT
+#define LED_SELBNK_SET SLB|=SLB_BIT
+#define LED_SELBNK_CLR SLB&=~SLB_BIT
 
 #define SWAP(a,b) {a^=b;b^=a;a^=b;}
 
@@ -79,7 +79,7 @@ namespace Ui {
 
 //-------------------------------------------------------------------------------------------------
 
-Colorduino::Colorduino()
+Colorduino::Colorduino(Color iWhiteBalance)
 : mSingletonInstance(*this)
 , mScreens()
 , mWrite(0)
@@ -88,6 +88,7 @@ Colorduino::Colorduino()
    initIo();
    initLed();
    initTimerIsr();
+   setWhiteBalance(iWhiteBalance);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -134,6 +135,19 @@ void Colorduino::initTimerIsr() {
 
 //-------------------------------------------------------------------------------------------------
 
+
+void Colorduino::setWhiteBalance(Color iColor) {
+   LED_LAT_CLR;
+   LED_SELBNK_CLR;
+   for (unsigned int x = 0; x < WIDTH; ++x) {
+      shiftOut(iColor,6);
+   }
+   LED_SELBNK_SET;
+
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void Colorduino::setPixel(uint8_t iX, uint8_t iY, Color iColor) {
    mScreens[mWrite][iX][iY] = iColor;
 }
@@ -165,13 +179,17 @@ void Colorduino::repaint() {
 
 //-------------------------------------------------------------------------------------------------
 
-inline void Colorduino::shiftOut(uint8_t iOneColor) {
-   for(unsigned int bit = 0 ; bit < BITS_PER_COLOR ; ++bit) {
-      if(iOneColor & 0x80)
+inline void Colorduino::shiftOut(uint8_t value, uint8_t numberOfBits) {
+   if (numberOfBits < BITS_PER_BYTE) {
+      value <<= (8 - numberOfBits);
+   }
+
+   for(unsigned int bit = 0 ; bit < numberOfBits ; ++bit) {
+      if(value & 0x80)
          LED_SDA_SET;
       else
          LED_SDA_CLR;
-      iOneColor <<= 1;
+      value <<= 1;
       LED_SCL_CLR;
       LED_SCL_SET;
    }
@@ -179,15 +197,21 @@ inline void Colorduino::shiftOut(uint8_t iOneColor) {
 
 //-------------------------------------------------------------------------------------------------
 
+inline void Colorduino::shiftOut(const Color& iColor, uint8_t numberOfBits) {
+   shiftOut(iColor.blue(),numberOfBits);
+   shiftOut(iColor.green(),numberOfBits);
+   shiftOut(iColor.red(),numberOfBits);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 inline void Colorduino::writeCurrentLine() {
-   LED_SLB_SET;
+   LED_SELBNK_SET;
    LED_LAT_CLR;
 
    for(unsigned int x = 0 ; x < WIDTH ; ++x)
    {
-      shiftOut(mScreens[mRead][x][mCurrentLine].blue());
-      shiftOut(mScreens[mRead][x][mCurrentLine].green());
-      shiftOut(mScreens[mRead][x][mCurrentLine].red());
+      shiftOut(mScreens[mRead][x][mCurrentLine]);
    }
    LED_LAT_SET;
    LED_LAT_CLR;
