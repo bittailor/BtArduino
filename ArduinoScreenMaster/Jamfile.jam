@@ -1,0 +1,9 @@
+
+project ArduinoScreenMaster 
+	: build-dir target 
+	: 
+	;
+
+use-project /ArduinoScreenMaster/main : source/main ;
+
+build-project source/main ;

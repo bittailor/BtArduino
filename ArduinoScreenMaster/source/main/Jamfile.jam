@@ -1,0 +1,9 @@
+
+project ArduinoScreenMaster/main 
+	: source-location src	 
+	: requirements <include>inc <include>src
+	: 
+	;
+
+
+exe ArduinoScreenMaster : [ glob-tree *.cpp ] /ArduinoCore/main//ArduinoCore ;
