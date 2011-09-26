@@ -1,0 +1,8 @@
+project ColorduinoFirmware/main 
+	: source-location src	 
+	: requirements <include>inc <include>src
+	:  
+	;
+
+exe ColorduinoFirmware : [ glob-tree *.cpp ] /ArduinoCore/main//ArduinoCore ;
+                            

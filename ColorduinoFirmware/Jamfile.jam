@@ -1,0 +1,10 @@
+
+project ColorduinoFirmware 
+	: build-dir target 
+	: 
+	;
+
+use-project /ColorduinoFirmware/main : source/main ;
+
+build-project source/main ;
+build-project source/test ;

@@ -1,0 +1,17 @@
+import testing ;
+
+project ColorduinoFirmware/test 
+	: source-location src	 
+	: requirements <include>inc <include>src
+	: 
+	;
+
+
+unit-test ColorduinoFirmwareUnittest : 
+    [ glob-tree *.cpp ] 
+    /ColorduinoFirmware/main//ColorduinoFirmware
+    /Arduino//gtest ;
+alias ColorduinoFirmwareUnittest :                                                    
+    : 
+    <toolset>avr ;
+    
