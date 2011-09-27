@@ -25,14 +25,14 @@
 #define SDA PORTD
 #define SCL PORTD
 
-#define OPEN_LINE_0()      {PORTB=0x01;}
-#define OPEN_LINE_1()      {PORTB=0x02;}
-#define OPEN_LINE_2()      {PORTB=0x04;}
-#define OPEN_LINE_3()      {PORTB=0x08;}
-#define OPEN_LINE_4()      {PORTB=0x10;}
-#define OPEN_LINE_5()      {PORTB=0x20;}
-#define OPEN_LINE_6()      {PORTD=0x08;}
-#define OPEN_LINE_7()      {PORTD=0x10;}
+#define OPEN_LINE_7()      {PORTB=0x01;}
+#define OPEN_LINE_6()      {PORTB=0x02;}
+#define OPEN_LINE_5()      {PORTB=0x04;}
+#define OPEN_LINE_4()      {PORTB=0x08;}
+#define OPEN_LINE_3()      {PORTB=0x10;}
+#define OPEN_LINE_2()      {PORTB=0x20;}
+#define OPEN_LINE_1()      {PORTD=0x08;}
+#define OPEN_LINE_0()      {PORTD=0x10;}
 #define CLOSE_ALL_LINES()  {PORTD=0x00;PORTB=0x00;}
 
 #define LED_RST_SET RST|=RST_BIT
@@ -149,7 +149,7 @@ void Colorduino::setWhiteBalance(Color iColor) {
 //-------------------------------------------------------------------------------------------------
 
 void Colorduino::setPixel(uint8_t iX, uint8_t iY, Color iColor) {
-   mScreens[mWrite][iX][iY] = iColor;
+   mScreens[mWrite](iX,iY) = iColor;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -157,7 +157,7 @@ void Colorduino::setPixel(uint8_t iX, uint8_t iY, Color iColor) {
 void Colorduino::fill(Color iColor) {
    for(unsigned int x = 0 ; x < WIDTH ; ++x) {
       for(unsigned int y = 0 ; y < HEIGHT ; ++y) {
-         mScreens[mWrite][x][y] = iColor;
+         mScreens[mWrite](x,y) = iColor;
       }
    }
 }
@@ -170,11 +170,7 @@ void Colorduino::repaint() {
       mWrite = mRead;
       mRead = swap;
    }
-   for(unsigned int x = 0 ; x < WIDTH ; ++x) {
-      for(unsigned int y = 0 ; y < HEIGHT ; ++y) {
-         mScreens[mWrite][x][y] = mScreens[mRead][x][y];
-      }
-   }
+   mScreens[mWrite] = mScreens[mRead];
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -211,7 +207,7 @@ inline void Colorduino::writeCurrentLine() {
 
    for(unsigned int x = 0 ; x < WIDTH ; ++x)
    {
-      shiftOut(mScreens[mRead][x][mCurrentLine]);
+      shiftOut(mScreens[mRead](x,mCurrentLine));
    }
    LED_LAT_SET;
    LED_LAT_CLR;

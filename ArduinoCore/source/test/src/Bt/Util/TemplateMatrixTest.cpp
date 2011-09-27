@@ -50,7 +50,8 @@ TEST_F(TemplateMatrixTest, initialize) {
 TEST_F(TemplateMatrixTest, getAndSet) {
    const int value = 564;
    mMatrix(2,3) = value;
-   EXPECT_EQ(value,mMatrix(2,3));
+   const TemplateMatrix<int,X,Y>& constMatrix = mMatrix;
+   EXPECT_EQ(value,constMatrix(2,3));
 }
 
 //-------------------------------------------------------------------------------------------------

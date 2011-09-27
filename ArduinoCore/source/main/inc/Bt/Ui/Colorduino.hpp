@@ -60,11 +60,9 @@ class Colorduino : public I_RgbScreen
       void shiftOut(uint8_t iOneColor, uint8_t numberOfBits = BITS_PER_BYTE);
       void shiftOut(const Color& iColor, uint8_t numberOfBits = BITS_PER_BYTE);
 
-
-      typedef Color ScreenBuffer[8][8];
-
       Bt::Util::Singleton<Colorduino>::Instance mSingletonInstance;
-      ScreenBuffer mScreens[2];
+
+      Bt::Util::TemplateMatrix<Color,WIDTH,HEIGHT> mScreens[2];
       uint8_t mWrite;
       uint8_t mRead;
       uint8_t mCurrentLine;

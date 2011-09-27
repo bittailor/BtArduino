@@ -12,6 +12,7 @@
 #define INC__Bt_Ui_RgbScreenServer__hpp
 
 #include "Bt/Ui/I_RgbScreen.hpp"
+
 #include <Bt/Util/Singleton.hpp>
 
 namespace Bt {
@@ -38,7 +39,7 @@ class RgbScreenServer
       void repaint(uint8_t iData[]);
 
 
-      I_RgbScreen& mScreen;
+      I_RgbScreen* mScreen;
       Bt::Util::Singleton<RgbScreenServer>::Instance mSingletonInstance;
 };
 

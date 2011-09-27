@@ -4,20 +4,15 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-//  Main of ArduinoCore test suite
+//  MemoryUsage
 //  
 //*************************************************************************************************
 
-#include <gtest/gtest.h>
+#ifndef INC__MemoryUsage__hpp
+#define INC__MemoryUsage__hpp
 
 #include <stdlib.h>
 
-#include "MemoryUsage.hpp"
+size_t currentMemoryUsage();
 
-
-
-int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
-
+#endif // INC__MemoryUsage__hpp

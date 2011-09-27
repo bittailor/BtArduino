@@ -21,18 +21,21 @@ class TemplateMatrix : public I_Matrix<T> {
    public:
       TemplateMatrix()
       : mData() {
-
       }
 
+      ~TemplateMatrix() {
+      }
+
+
       virtual const T& operator()(uint8_t iX, uint8_t iY) const {
+         // TODO Bt: range checks
          return mData[iX][iY];
       }
 
       virtual T& operator()(uint8_t iX, uint8_t iY) {
+         // TODO Bt: range checks
          return mData[iX][iY];
       }
-
-      ~TemplateMatrix() {}
 
    private:
       T mData[X][Y];

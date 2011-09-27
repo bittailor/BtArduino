@@ -25,7 +25,7 @@ void onReceiveCallback(int iNumberOfBytes) {
 //-------------------------------------------------------------------------------------------------
 
 RgbScreenServer::RgbScreenServer(I_RgbScreen& iScreen)
-:mScreen(iScreen), mSingletonInstance(*this) {
+:mScreen(&iScreen), mSingletonInstance(*this) {
    Wire.onReceive(&onReceiveCallback);
 }
 
@@ -68,19 +68,19 @@ void RgbScreenServer::receive(int iNumberOfBytes) {
 //-------------------------------------------------------------------------------------------------
 
 void RgbScreenServer::setPixel(uint8_t iData[]) {
-   mScreen.setPixel(iData[1],iData[2],Color(iData[3],iData[4],iData[5]));
+   mScreen->setPixel(iData[1],iData[2],Color(iData[3],iData[4],iData[5]));
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void RgbScreenServer::fill(uint8_t iData[]) {
-   mScreen.fill(Color(iData[1],iData[2],iData[3]));
+   mScreen->fill(Color(iData[1],iData[2],iData[3]));
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void RgbScreenServer::repaint(uint8_t iData[]) {
-   mScreen.repaint();
+   mScreen->repaint();
 }
 
 //-------------------------------------------------------------------------------------------------
