@@ -5,6 +5,8 @@ project ArduinoCore
 	;
 
 use-project /ArduinoCore/main : source/main ;
+use-project /ArduinoCore/mock : source/mock ;
 
 build-project source/main ;
+build-project source/mock ;
 build-project source/test ;

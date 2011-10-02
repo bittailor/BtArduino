@@ -21,8 +21,12 @@ class I_Matrix {
    public:
       virtual ~I_Matrix() {}
       
-      virtual const T& operator()(uint8_t iX, uint8_t iY) const = 0;
-      virtual T& operator()(uint8_t iX, uint8_t iY) = 0;
+      virtual uint8_t rows() const = 0;
+      virtual uint8_t columns() const = 0;
+
+
+      virtual const T& operator()(uint8_t iRow, uint8_t iColumn) const = 0;
+      virtual T& operator()(uint8_t iRow, uint8_t iColumn) = 0;
 
 };
 

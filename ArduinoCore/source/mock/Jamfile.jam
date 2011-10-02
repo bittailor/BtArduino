@@ -1,0 +1,11 @@
+
+project ArduinoCore/mock 
+	: source-location src	 
+	: requirements 
+	   <include>inc 
+	   <include>src
+	: usage-requirements 
+	   <include>inc 
+	;
+
+alias ArduinoCore : /Arduino//gmock   ;

@@ -11,8 +11,8 @@
 #ifndef INC__Bt_Ui_Colorduino__hpp
 #define INC__Bt_Ui_Colorduino__hpp
 
-#include <Bt/Util/Singleton.hpp>
-#include <Bt/Util/TemplateMatrix.hpp>
+#include "Bt/Util/Singleton.hpp"
+#include "Bt/Util/TemplateMatrix.hpp"
 
 #include "I_RgbScreen.hpp"
 
@@ -33,6 +33,9 @@ class Colorduino : public I_RgbScreen
       ~Colorduino();
 
       void setWhiteBalance(Color iColor);
+
+      virtual size_t width();
+      virtual size_t height();
 
       virtual void setPixel(uint8_t iX, uint8_t iY, Color iColor) ;
       virtual void fill(Color iColor) ;
@@ -62,7 +65,7 @@ class Colorduino : public I_RgbScreen
 
       Bt::Util::Singleton<Colorduino>::Instance mSingletonInstance;
 
-      Bt::Util::TemplateMatrix<Color,WIDTH,HEIGHT> mScreens[2];
+      Bt::Util::TemplateMatrix<Color,HEIGHT,WIDTH> mScreens[2];
       uint8_t mWrite;
       uint8_t mRead;
       uint8_t mCurrentLine;

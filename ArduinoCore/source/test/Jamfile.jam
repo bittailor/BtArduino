@@ -10,6 +10,7 @@ project ArduinoCore/test
 unit-test ArduinoCoreUnittest : 
     [ glob-tree *.cpp ] 
     /ArduinoCore/main//ArduinoCore
+    /ArduinoCore/mock//ArduinoCore
     /Arduino//gtest ;
 alias ArduinoCoreUnittest :                                                    
      : 

@@ -16,7 +16,7 @@
 namespace Bt {
 namespace Util {
 
-template<typename T, uint8_t X, uint8_t Y>
+template<typename T, uint8_t ROWS, uint8_t COLUMNS>
 class TemplateMatrix : public I_Matrix<T> {
    public:
       TemplateMatrix()
@@ -26,19 +26,26 @@ class TemplateMatrix : public I_Matrix<T> {
       ~TemplateMatrix() {
       }
 
-
-      virtual const T& operator()(uint8_t iX, uint8_t iY) const {
-         // TODO Bt: range checks
-         return mData[iX][iY];
+      virtual uint8_t rows() const {
+         return ROWS;
       }
 
-      virtual T& operator()(uint8_t iX, uint8_t iY) {
+      virtual uint8_t columns() const {
+         return COLUMNS;
+      }
+
+      virtual const T& operator()(uint8_t iRow, uint8_t iColumn) const {
          // TODO Bt: range checks
-         return mData[iX][iY];
+         return mData[iRow][iColumn];
+      }
+
+      virtual T& operator()(uint8_t iRow, uint8_t iColumn) {
+         // TODO Bt: range checks
+         return mData[iRow][iColumn];
       }
 
    private:
-      T mData[X][Y];
+      T mData[ROWS][COLUMNS];
 };
 
 //-------------------------------------------------------------------------------------------------

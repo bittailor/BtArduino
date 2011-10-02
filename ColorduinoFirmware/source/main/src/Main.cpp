@@ -20,8 +20,8 @@ int main() {
 
    Serial.begin(9600);
 
-   Wire.begin(1);
-   //Wire.begin(2);
+   //Wire.begin(1);
+   Wire.begin(2);
 
    Bt::Ui::Colorduino colorduino;
    Bt::Ui::RgbScreenServer server(colorduino);

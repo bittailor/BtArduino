@@ -30,6 +30,10 @@ class Color
       ~Color() {
       }
 
+      bool operator==(const Color iColor) {
+         return mRed == iColor.mRed && mGreen == iColor.mGreen && mBlue == iColor.mBlue;
+      }
+
       uint8_t red() const {
          return mRed;
       }

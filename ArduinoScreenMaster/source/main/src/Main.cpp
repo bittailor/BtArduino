@@ -12,6 +12,7 @@
 #include <Wire.h>
 #include <Bt/Ui/Colorduino.hpp>
 #include <Bt/Ui/RgbScreenProxy.hpp>
+#include <Bt/Ui/CompoundRgbScreen.hpp>
 
 
 int main() {
@@ -21,48 +22,90 @@ int main() {
 
    Bt::Ui::RgbScreenProxy proxy1(1);
    Bt::Ui::RgbScreenProxy proxy2(2);
+   Bt::Util::TemplateMatrix<Bt::Ui::I_RgbScreen*,1,2> screens;
+   screens(0,0) = &proxy1;
+   screens(0,1) = &proxy2;
+
+   Bt::Ui::CompoundRgbScreen screen(screens);
 
 
-   Bt::Ui::Color black(  0,  0,  0);
-   Bt::Ui::Color red  (255,  0,  0);
-   Bt::Ui::Color green(  0,255,  0);
-   Bt::Ui::Color blue (  0,  0,255);
-   Bt::Ui::Color white(255,255,255);
 
-   Bt::Ui::Color colors[] = {
+   Bt::Ui::Color black     (  0,  0,  0);
+   Bt::Ui::Color red       (255,  0,  0);
+   Bt::Ui::Color green     (  0,255,  0);
+   Bt::Ui::Color blue      (  0,  0,255);
+   Bt::Ui::Color yellow    (255,255,  0);
+   Bt::Ui::Color white     (255,255,255);
+
+   /*Bt::Ui::Color colors[] = {
       Bt::Ui::Color(255,255,255),
       Bt::Ui::Color(  0,  0,255),
       Bt::Ui::Color(  0,255,  0),
       Bt::Ui::Color(255,  0,  0),
       Bt::Ui::Color(  0,  0,  0)
    };
+   */
 
 
-   int d = 100;
+   int d = 1;
 
+   proxy1.fill(green);
+   proxy1.repaint();
+   proxy2.fill(red);
+   proxy2.repaint();
+   delay(d);
    proxy1.fill(black);
+   proxy1.repaint();
    proxy2.fill(black);
+   proxy2.repaint();
+   delay(d);
 
    while(true) {
-      proxy1.fill(black);
-      proxy1.repaint();
+      screen.fill(black);
+      screen.repaint();
       delay(d);
-      for (int i = 0; i < 8; ++i) {
-         proxy1.setPixel(i,0,green);
-         proxy1.repaint();
+      for (size_t i = 0 ; i < screen.width() ; ++i) {
+         screen.setPixel(i,0,green);
+         screen.repaint();
          delay(d);
       }
-      for (int i = 0; i < 8; ++i) {
-         proxy1.setPixel(i,i,red);
-         proxy1.repaint();
+      for (size_t i = 0 ; i < screen.height() ; ++i) {
+         screen.setPixel(i,i,red);
+         screen.repaint();
          delay(d);
       }
-      for (int i = 0; i < 8; ++i) {
-         proxy1.setPixel(0,7-i,Bt::Ui::Color(100,i*30,255-i*30));
-         proxy1.repaint();
+      for (size_t i = 0 ; i < screen.height() ; ++i) {
+         screen.setPixel(screen.width()/2+i,screen.height()-1-i,red);
+         screen.repaint();
          delay(d);
       }
+
+      for (size_t i = 0; i < screen.height() ; ++i) {
+         screen.setPixel(0,screen.height()-1-i,blue);
+         screen.repaint();
+         delay(d);
+      }
+
+      for (size_t i = 0; i < screen.height() ; ++i) {
+         screen.setPixel(screen.width()-1,screen.height()-1-i,blue);
+         screen.repaint();
+         delay(d);
+      }
+
+
+      for (int l = screen.height()-1; l > 3; --l) {
+         for (size_t i = 0 ; i < screen.width() ; ++i) {
+            screen.setPixel(screen.width()-1-i,l,yellow);
+            //delayMicroseconds(100);
+         }
+      }
+
+      screen.repaint();
+      delay(d);
+
+      delay(3000);
    }
+
 
 
    /*

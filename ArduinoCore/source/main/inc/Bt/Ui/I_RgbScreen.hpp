@@ -12,6 +12,7 @@
 #define INC__Bt_Ui_I_RgbScreen__hpp
 
 #include <stdint.h>
+#include <stddef.h>
 
 #include "Bt/Ui/Color.hpp"
 
@@ -23,6 +24,9 @@ class I_RgbScreen {
    public:
       virtual ~I_RgbScreen() {}
       
+      virtual size_t width() = 0;
+      virtual size_t height() = 0;
+
       /**
        * Sets the color of a pixel in the matrix.
        * @param iX  the X coordinate

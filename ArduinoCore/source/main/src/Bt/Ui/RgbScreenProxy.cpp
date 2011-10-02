@@ -31,6 +31,20 @@ RgbScreenProxy::~RgbScreenProxy() {
 
 //-------------------------------------------------------------------------------------------------
 
+size_t RgbScreenProxy::width() {
+   // TODO Bt: Get width from server
+   return 8;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+size_t RgbScreenProxy::height() {
+   // TODO Bt: Get height from server
+   return 8;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void RgbScreenProxy::setPixel(uint8_t iX, uint8_t iY, Color iColor) {
    Wire.beginTransmission(mRemoteAddress);
    uint8_t data[] = {SET_PIXEL,iX,iY,iColor.red(),iColor.green(),iColor.blue()};

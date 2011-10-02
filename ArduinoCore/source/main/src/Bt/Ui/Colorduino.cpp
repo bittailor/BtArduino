@@ -46,9 +46,6 @@
 #define LED_SELBNK_SET SLB|=SLB_BIT
 #define LED_SELBNK_CLR SLB&=~SLB_BIT
 
-#define SWAP(a,b) {a^=b;b^=a;a^=b;}
-
-
 namespace Bt {
 namespace Ui {
 
@@ -148,8 +145,20 @@ void Colorduino::setWhiteBalance(Color iColor) {
 
 //-------------------------------------------------------------------------------------------------
 
+size_t Colorduino::width() {
+   return WIDTH;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+size_t Colorduino::height() {
+   return HEIGHT;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void Colorduino::setPixel(uint8_t iX, uint8_t iY, Color iColor) {
-   mScreens[mWrite](iX,iY) = iColor;
+   mScreens[mWrite](iY,iX) = iColor;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -157,7 +166,7 @@ void Colorduino::setPixel(uint8_t iX, uint8_t iY, Color iColor) {
 void Colorduino::fill(Color iColor) {
    for(unsigned int x = 0 ; x < WIDTH ; ++x) {
       for(unsigned int y = 0 ; y < HEIGHT ; ++y) {
-         mScreens[mWrite](x,y) = iColor;
+         mScreens[mWrite](y,x) = iColor;
       }
    }
 }
@@ -207,7 +216,7 @@ inline void Colorduino::writeCurrentLine() {
 
    for(unsigned int x = 0 ; x < WIDTH ; ++x)
    {
-      shiftOut(mScreens[mRead](x,mCurrentLine));
+      shiftOut(mScreens[mRead](mCurrentLine,x));
    }
    LED_LAT_SET;
    LED_LAT_CLR;

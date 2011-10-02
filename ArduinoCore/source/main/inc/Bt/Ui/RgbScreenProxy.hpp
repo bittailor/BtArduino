@@ -16,7 +16,7 @@
 namespace Bt {
 namespace Ui {
 
-class RgbScreenProxy : I_RgbScreen
+class RgbScreenProxy : public I_RgbScreen
 {
    public:
       enum {
@@ -27,6 +27,9 @@ class RgbScreenProxy : I_RgbScreen
 
       RgbScreenProxy(uint8_t iRemoteAddress);
       ~RgbScreenProxy();
+
+      virtual size_t width();
+      virtual size_t height();
    
       virtual void setPixel(uint8_t iX, uint8_t iY, Color iColor);
       virtual void fill(Color iColor);
