@@ -8,6 +8,7 @@
 //  
 //*************************************************************************************************
 
+#include <WProgram.h>
 #include <wiring.h>
 #include <Wire.h>
 #include <Bt/Ui/Colorduino.hpp>
@@ -17,6 +18,8 @@
 
 int main() {
    init();
+
+   //Serial.begin(9600);
 
    Wire.begin();
 
@@ -47,7 +50,7 @@ int main() {
    */
 
 
-   int d = 1;
+   int d = 10;
 
    proxy1.fill(green);
    proxy1.repaint();
@@ -61,6 +64,22 @@ int main() {
    delay(d);
 
    while(true) {
+      for (size_t y = 0; y < screen.height(); ++y) {
+         for (size_t x = 0; x < screen.width(); ++x) {
+            screen.setPixel(x,y,green);
+            screen.repaint();
+            delay(d);
+         }
+      }
+      for (size_t y = 0; y < screen.height(); ++y) {
+         for (size_t x = 0; x < screen.width(); ++x) {
+            screen.setPixel(x,y,blue);
+         }
+      }
+      screen.repaint();
+
+      delay(1000);
+
       screen.fill(black);
       screen.repaint();
       delay(d);
@@ -93,17 +112,16 @@ int main() {
       }
 
 
-      for (int l = screen.height()-1; l > 3; --l) {
+      for (int l = screen.height()-1; l > 2; --l) {
          for (size_t i = 0 ; i < screen.width() ; ++i) {
             screen.setPixel(screen.width()-1-i,l,yellow);
-            //delayMicroseconds(100);
          }
       }
 
       screen.repaint();
       delay(d);
 
-      delay(3000);
+      delay(1000);
    }
 
 

@@ -10,6 +10,7 @@
 
 #include "Bt/Ui/RgbScreenProxy.hpp"
 
+#include <wiring.h>
 #include <Wire.h>
 
 namespace Bt {
@@ -49,7 +50,7 @@ void RgbScreenProxy::setPixel(uint8_t iX, uint8_t iY, Color iColor) {
    Wire.beginTransmission(mRemoteAddress);
    uint8_t data[] = {SET_PIXEL,iX,iY,iColor.red(),iColor.green(),iColor.blue()};
    Wire.send(data,sizeof(data)/sizeof(data[0]));
-   Wire.endTransmission();
+   send();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -58,7 +59,7 @@ void RgbScreenProxy::fill(Color iColor) {
    Wire.beginTransmission(mRemoteAddress);
    uint8_t data[] = {FILL,iColor.red(),iColor.green(),iColor.blue()};
    Wire.send(data,sizeof(data)/sizeof(data[0]));
-   Wire.endTransmission();
+   send();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -67,7 +68,21 @@ void RgbScreenProxy::repaint() {
    Wire.beginTransmission(mRemoteAddress);
    uint8_t data[] = {REPAINT};
    Wire.send(data,sizeof(data)/sizeof(data[0]));
-   Wire.endTransmission();
+   send();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void RgbScreenProxy::send() {
+   uint8_t status = Wire.endTransmission();
+   if (status != 0) {
+      uint8_t retry = 0;
+      while (status != 0 && retry < 20) {
+         delayMicroseconds(retry);
+         status = Wire.endTransmission();
+         retry++;
+      }
+   }
 }
 
 //-------------------------------------------------------------------------------------------------

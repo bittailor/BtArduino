@@ -43,6 +43,8 @@ class RgbScreenProxy : public I_RgbScreen
       // Operator= to prohibit copy assignment
       RgbScreenProxy& operator=(const RgbScreenProxy&);
 
+      void send();
+
       uint8_t mRemoteAddress;
 };
 
