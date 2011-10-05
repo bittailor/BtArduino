@@ -12,8 +12,7 @@
 
 #include <avr/interrupt.h>
 
-#include "pins_arduino.h"
-#include "wiring.h"
+#include "Arduino.h"
 
 namespace Bt {
 namespace Io {

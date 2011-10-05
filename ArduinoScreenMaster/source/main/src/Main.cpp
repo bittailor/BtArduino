@@ -8,8 +8,7 @@
 //  
 //*************************************************************************************************
 
-#include <WProgram.h>
-#include <wiring.h>
+#include <Arduino.h>
 #include <Wire.h>
 #include <Bt/Ui/Colorduino.hpp>
 #include <Bt/Ui/RgbScreenProxy.hpp>

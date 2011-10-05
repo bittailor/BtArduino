@@ -43,7 +43,7 @@ void RgbScreenServer::receive(int iNumberOfBytes) {
    int i = 0;
    while(Wire.available() && i < iNumberOfBytes) {
       if (Wire.available()) {
-         data[i] = Wire.receive();
+         data[i] = Wire.read();
          i++;
       }
    }

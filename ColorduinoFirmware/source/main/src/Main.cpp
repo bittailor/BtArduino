@@ -8,8 +8,7 @@
 //  
 //*************************************************************************************************
 
-#include <WProgram.h>
-#include <wiring.h>
+#include <Arduino.h>
 #include <Wire.h>
 #include <Bt/Ui/Colorduino.hpp>
 #include <Bt/Ui/RgbScreenServer.hpp>
@@ -20,7 +19,7 @@ int main() {
 
    //Serial.begin(9600);
 
-   uint8_t address = 1;
+   uint8_t address = 2;
 
    Wire.begin(address);
 
