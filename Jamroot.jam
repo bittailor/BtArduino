@@ -1,0 +1,46 @@
+project Arduino 
+	: 
+	: requirements 
+		# <link>static
+	;
+	
+variant HostUnitTest : 
+    <toolset>darwin
+	<toolset-avr:mcu>atmega328p
+	<toolset-avr:cpufrequency>16000000
+	<optimization>off 
+	<debug-symbols>on 
+	<runtime-debugging>on 
+    <link>static ; 
+
+variant ArduinoUno : 
+    <toolset>avr
+	<toolset-avr:mcu>atmega328p
+	<toolset-avr:cpufrequency>16000000
+	<optimization>space 
+	<debug-symbols>off 
+	<inlining>full
+    <runtime-debugging>off 
+    <define>NDEBUG 
+    <link>static ; 
+
+lib gtest : : <name>gtest ;
+lib gmock : : <name>gmock ;
+
+	
+local projects ;
+
+for file in [ glob * ]
+{
+	if [ glob $(file)/Jamfile.jam ]
+	{
+		projects += $(file) ;	
+	}
+}
+
+# echo projects is $(projects) ;
+
+for project in $(projects)
+{
+	use-project /$(project) : $(project) ;  
+}
