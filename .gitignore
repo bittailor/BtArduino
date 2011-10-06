@@ -1,0 +1,14 @@
+.DS_Store
+.metadata
+ArduinoCore/target
+ArduinoScreenMaster/target
+ColorduinoFirmware/target
+
+ArduinoCppUTest
+ArduinoLibrary
+ArduinoLite
+ArduinoPlayground
+AvrStl
+ProjectTemplate
+bin
+JColorControl
