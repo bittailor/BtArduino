@@ -1,0 +1,3 @@
+[submodule "ArduinoLibrary"]
+	path = ArduinoLibrary
+	url = git@github.com:bittailor/ArduinoLibrary.git
