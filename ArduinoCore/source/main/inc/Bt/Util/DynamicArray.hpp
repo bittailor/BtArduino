@@ -19,7 +19,11 @@ class DynamicArray {
    public:
       explicit DynamicArray(size_t iSize) : mSize(iSize) {
          if (mSize > 0) {
-            mData = new T[mSize];
+            mData = new T[mSize]();
+            /*
+            for (size_t i = 0; i < mSize; ++i) {
+               mData[i] = T();
+            }*/
          } else {
             mData = 0;
          }

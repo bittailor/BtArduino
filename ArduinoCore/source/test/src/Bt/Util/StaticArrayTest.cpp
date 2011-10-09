@@ -4,25 +4,23 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-//  Bt::Util::DynamicArrayTest
+//  Bt::Util::StaticArrayTest
 //  
 //*************************************************************************************************
 
 #include <gtest/gtest.h>
 
-#include "Bt/Util/DynamicArray.hpp"
-
-#include "MemoryUsage.hpp"
+#include "Bt/Util/StaticArray.hpp"
 
 namespace Bt {
 namespace Util {
 
 //-------------------------------------------------------------------------------------------------
 
-TEST(DynamicArrayTest, testConstructor) {
-   size_t size = 32;
-   DynamicArray<int> array(size);
-   EXPECT_EQ(size,array.size());
+TEST(StaticArrayTest, testConstructor) {
+   const static size_t SIZE = 9;
+   StaticArray<int,SIZE> array;
+   EXPECT_EQ(SIZE,array.size());
    for (unsigned int i = 0; i < array.size() ; ++i) {
       EXPECT_EQ(0,array[i]);
    }
@@ -30,30 +28,17 @@ TEST(DynamicArrayTest, testConstructor) {
 
 //-------------------------------------------------------------------------------------------------
 
-TEST(DynamicArrayTest, testMemory) {
-   uint8_t size = 32;
-   size_t memoryUsage = currentMemoryUsage();
-   {
-      DynamicArray<uint8_t> buffer(size);
-   }
-   EXPECT_EQ(currentMemoryUsage(),memoryUsage);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-TEST(DynamicArrayTest, testGetSet) {
-   uint8_t size = 32;
-   DynamicArray<uint8_t> buffer(size);
-   for (unsigned int i = 0; i < buffer.size() ; ++i) {
-      buffer[i] = i;
+TEST(StaticArrayTest, getAndSet) {
+   StaticArray<int,12> array;
+   for (unsigned int i = 0; i < array.size() ; ++i) {
+      array[i] = i;
    }
 
-   const DynamicArray<uint8_t>& constArray = buffer;
+   StaticArray<int,12>& constArray = array;
 
    for (unsigned int i = 0; i < constArray.size() ; ++i) {
       EXPECT_EQ(i,constArray[i]);
    }
-
 }
 
 //-------------------------------------------------------------------------------------------------
