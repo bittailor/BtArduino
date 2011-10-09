@@ -4,12 +4,12 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-//  Bt::Util::TemplateMatrix
+//  Bt::Util::StaticMatrix
 //  
 //*************************************************************************************************
 
-#ifndef INC__Bt_Util_TemplateMatrix__hpp
-#define INC__Bt_Util_TemplateMatrix__hpp
+#ifndef INC__Bt_Util_StaticMatrix__hpp
+#define INC__Bt_Util_StaticMatrix__hpp
 
 #include "I_Matrix.hpp"
 
@@ -17,13 +17,13 @@ namespace Bt {
 namespace Util {
 
 template<typename T, uint8_t ROWS, uint8_t COLUMNS>
-class TemplateMatrix : public I_Matrix<T> {
+class StaticMatrix : public I_Matrix<T> {
    public:
-      TemplateMatrix()
+      StaticMatrix()
       : mData() {
       }
 
-      ~TemplateMatrix() {
+      ~StaticMatrix() {
       }
 
       virtual uint8_t rows() const {
@@ -58,4 +58,4 @@ class TemplateMatrix : public I_Matrix<T> {
 } // namespace Util
 } // namespace Bt
 
-#endif // INC__Bt_Util_TemplateMatrix__hpp
+#endif // INC__Bt_Util_StaticMatrix__hpp

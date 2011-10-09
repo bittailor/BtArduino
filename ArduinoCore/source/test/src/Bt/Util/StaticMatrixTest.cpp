@@ -4,20 +4,20 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-//  Bt::Util::TemplateMatrixTest
+//  Bt::Util::StaticMatrixTest
 //  
 //*************************************************************************************************
 
 #include <gtest/gtest.h>
 
-#include "Bt/Util/TemplateMatrix.hpp"
+#include "Bt/Util/StaticMatrix.hpp"
 
 namespace Bt {
 namespace Util {
 
 //-------------------------------------------------------------------------------------------------
 
-class TemplateMatrixTest : public ::testing::Test {
+class StaticMatrixTest : public ::testing::Test {
    
    protected:
       static const uint8_t X = 4;
@@ -31,13 +31,13 @@ class TemplateMatrixTest : public ::testing::Test {
          
       }
 
-      TemplateMatrix<int,X,Y> mMatrix;
+      StaticMatrix<int,X,Y> mMatrix;
 
 };
 
 //-------------------------------------------------------------------------------------------------
 
-TEST_F(TemplateMatrixTest, initialize) {
+TEST_F(StaticMatrixTest, initialize) {
    for (uint8_t x = 0; x < X; ++x) {
       for (uint8_t y = 0; y < Y; ++y) {
          EXPECT_EQ(0,mMatrix(x,y));
@@ -47,22 +47,22 @@ TEST_F(TemplateMatrixTest, initialize) {
 
 //-------------------------------------------------------------------------------------------------
 
-TEST_F(TemplateMatrixTest, getAndSet) {
+TEST_F(StaticMatrixTest, getAndSet) {
    const int value = 564;
    mMatrix(2,3) = value;
-   const TemplateMatrix<int,X,Y>& constMatrix = mMatrix;
+   const StaticMatrix<int,X,Y>& constMatrix = mMatrix;
    EXPECT_EQ(value,constMatrix(2,3));
 }
 
 //-------------------------------------------------------------------------------------------------
 
-TEST_F(TemplateMatrixTest, assign) {
+TEST_F(StaticMatrixTest, assign) {
 
    mMatrix(1,1) = 11;
    mMatrix(2,2) = 22;
    mMatrix(1,3) = 13;
 
-   TemplateMatrix<int,X,Y> otherMatrix;
+   StaticMatrix<int,X,Y> otherMatrix;
 
    EXPECT_EQ(0,otherMatrix(1,1));
 

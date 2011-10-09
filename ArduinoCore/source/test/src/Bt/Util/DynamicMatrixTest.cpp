@@ -11,7 +11,7 @@
 #include <gtest/gtest.h>
 
 #include "Bt/Util/DynamicMatrix.hpp"
-#include "Bt/Util/TemplateMatrix.hpp"
+#include "Bt/Util/StaticMatrix.hpp"
 
 #include "MemoryUsage.hpp"
 
@@ -108,7 +108,7 @@ TEST(DynamicMatrixTest, copy) {
 TEST(DynamicMatrixTest, copyViaInterface) {
    size_t memoryUsage = currentMemoryUsage();
    {
-      TemplateMatrix<int,5,8> matrix;
+      StaticMatrix<int,5,8> matrix;
       fill(matrix);
       DynamicMatrix<int> copy(matrix);
       EXPECT_EQ(45,matrix(4,5));
@@ -132,7 +132,7 @@ TEST(DynamicMatrixTest, copyViaInterface) {
 TEST(DynamicMatrixTest, assignViaInterface) {
    size_t memoryUsage = currentMemoryUsage();
    {
-      TemplateMatrix<int,5,8> matrix;
+      StaticMatrix<int,5,8> matrix;
       fill(matrix);
       DynamicMatrix<int> copy(2,3);
 

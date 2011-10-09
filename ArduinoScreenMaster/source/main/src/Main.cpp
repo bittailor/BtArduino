@@ -24,7 +24,7 @@ int main() {
 
    Bt::Ui::RgbScreenProxy proxy1(1);
    Bt::Ui::RgbScreenProxy proxy2(2);
-   Bt::Util::TemplateMatrix<Bt::Ui::I_RgbScreen*,1,2> screens;
+   Bt::Util::StaticMatrix<Bt::Ui::I_RgbScreen*,1,2> screens;
    screens(0,0) = &proxy1;
    screens(0,1) = &proxy2;
 

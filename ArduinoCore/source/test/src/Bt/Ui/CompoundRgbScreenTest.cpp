@@ -12,7 +12,7 @@
 
 #include "Bt/Ui/CompoundRgbScreen.hpp"
 #include "Bt/Ui/RgbScreenGMock.hpp"
-#include "Bt/Util/TemplateMatrix.hpp"
+#include "Bt/Util/StaticMatrix.hpp"
 
 using namespace ::testing;
 
@@ -31,14 +31,14 @@ class CompoundRgbScreenTest : public ::testing::Test {
 
       }
       
-      Bt::Util::TemplateMatrix<I_RgbScreen*,1,2> init() {
+      Bt::Util::StaticMatrix<I_RgbScreen*,1,2> init() {
          EXPECT_CALL(mScreen1, height()).WillRepeatedly(Return(8));
          EXPECT_CALL(mScreen1, width()).WillRepeatedly(Return(8));
 
          EXPECT_CALL(mScreen2, height()).WillRepeatedly(Return(8));
          EXPECT_CALL(mScreen2, width()).WillRepeatedly(Return(8));
 
-         Bt::Util::TemplateMatrix<I_RgbScreen*,1,2> screens;
+         Bt::Util::StaticMatrix<I_RgbScreen*,1,2> screens;
          screens(0,0) = &mScreen1;
          screens(0,1) = &mScreen2;
          return screens;

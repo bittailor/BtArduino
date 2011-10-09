@@ -12,7 +12,7 @@
 #define INC__Bt_Ui_Colorduino__hpp
 
 #include "Bt/Util/Singleton.hpp"
-#include "Bt/Util/TemplateMatrix.hpp"
+#include "Bt/Util/StaticMatrix.hpp"
 
 #include "I_RgbScreen.hpp"
 
@@ -65,7 +65,7 @@ class Colorduino : public I_RgbScreen
 
       Bt::Util::Singleton<Colorduino>::Instance mSingletonInstance;
 
-      Bt::Util::TemplateMatrix<Color,HEIGHT,WIDTH> mScreens[2];
+      Bt::Util::StaticMatrix<Color,HEIGHT,WIDTH> mScreens[2];
       uint8_t mWrite;
       uint8_t mRead;
       uint8_t mCurrentLine;
