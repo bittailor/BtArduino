@@ -4,20 +4,20 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-//  Bt::Util::Array
+//  Bt::Util::DynamicArray
 //  
 //*************************************************************************************************
 
-#ifndef INC__Bt_Util_Array__hpp
-#define INC__Bt_Util_Array__hpp
+#ifndef INC__Bt_Util_DynamicArray__hpp
+#define INC__Bt_Util_DynamicArray__hpp
 
 namespace Bt {
 namespace Util {
 
 template<typename T>
-class Array {
+class DynamicArray {
    public:
-      explicit Array(size_t iSize) : mSize(iSize) {
+      explicit DynamicArray(size_t iSize) : mSize(iSize) {
          if (mSize > 0) {
             mData = new T[mSize];
          } else {
@@ -45,7 +45,7 @@ class Array {
       }
       */
 
-      ~Array() {
+      ~DynamicArray() {
          delete mData;
       }
 
@@ -62,10 +62,10 @@ class Array {
       }
 
    private:
-      Array(const Array<T>& iArray);
-      Array& operator=(const Array& iArray);
+      DynamicArray(const DynamicArray<T>& iArray);
+      DynamicArray& operator=(const DynamicArray& iArray);
 
-      void copy(const Array<T>& iArray) {
+      void copy(const DynamicArray<T>& iArray) {
          for (int i = 0; i < iArray.mSize; ++i) {
             mData[i] = iArray[i];
          }
@@ -79,4 +79,4 @@ class Array {
 } // namespace Util
 } // namespace Bt
 
-#endif // INC__Bt_Util_Array__hpp
+#endif // INC__Bt_Util_DynamicArray__hpp

@@ -13,7 +13,7 @@
 
 #include "Bt/Util/DynamicMatrix.hpp"
 #include "Bt/Ui/I_RgbScreen.hpp"
-#include "Bt/Util/Array.hpp"
+#include "Bt/Util/DynamicArray.hpp"
 
 namespace Bt {
 namespace Ui {
@@ -49,8 +49,8 @@ class CompoundRgbScreen : public I_RgbScreen
 
       Util::DynamicMatrix<I_RgbScreen*> mScreens;
 
-      Bt::Util::Array<Index> mRowIndex;
-      Bt::Util::Array<Index> mColumnIndex;
+      Bt::Util::DynamicArray<Index> mRowIndex;
+      Bt::Util::DynamicArray<Index> mColumnIndex;
 
 };
 
