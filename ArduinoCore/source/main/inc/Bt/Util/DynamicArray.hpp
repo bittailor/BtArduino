@@ -50,7 +50,7 @@ class DynamicArray {
       */
 
       ~DynamicArray() {
-         delete mData;
+         delete [] mData;
       }
 
       size_t size() const {

@@ -45,7 +45,7 @@ class DynamicMatrix : public I_Matrix<T>
       }
 
       ~DynamicMatrix() {
-         delete mData;
+         delete [] mData;
       }
 
       DynamicMatrix& operator=(const DynamicMatrix& iMatrix) {
