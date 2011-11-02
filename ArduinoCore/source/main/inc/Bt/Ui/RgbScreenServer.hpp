@@ -13,19 +13,20 @@
 
 #include "Bt/Ui/I_RgbScreen.hpp"
 
+#include <Bt/Com/I_RequestHandler.hpp>
 #include <Bt/Util/Singleton.hpp>
 
 namespace Bt {
 namespace Ui {
 
-class RgbScreenServer
+class RgbScreenServer : public Com::I_RequestHandler
 {
    public:
 
       RgbScreenServer(I_RgbScreen& iScreen);
       ~RgbScreenServer();
 
-      void receive(int iNumberOfBytes);
+      virtual void handleRequest(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut) ;
 
    private:
    	  // Constructor to prohibit copy construction.
@@ -34,13 +35,11 @@ class RgbScreenServer
       // Operator= to prohibit copy assignment
       RgbScreenServer& operator=(const RgbScreenServer&);
 
-      void setPixel(uint8_t iData[]);
-      void fill(uint8_t iData[]);
-      void repaint(uint8_t iData[]);
-
+      void setPixel(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut);
+      void fill(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut);
+      void repaint(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut);
 
       I_RgbScreen* mScreen;
-      Bt::Util::Singleton<RgbScreenServer>::Instance mSingletonInstance;
 };
 
 } // namespace Ui

@@ -10,76 +10,63 @@
 
 #include "Bt/Ui/RgbScreenServer.hpp"
 
-#include <Wire.h>
-
 #include "Bt/Ui/RgbScreenProxy.hpp"
 
 namespace Bt {
 namespace Ui {
 
 
-void onReceiveCallback(int iNumberOfBytes) {
-   Bt::Util::Singleton<Bt::Ui::RgbScreenServer>::instance()->receive(iNumberOfBytes);
-}
-
 //-------------------------------------------------------------------------------------------------
 
 RgbScreenServer::RgbScreenServer(I_RgbScreen& iScreen)
-:mScreen(&iScreen), mSingletonInstance(*this) {
-   Wire.onReceive(&onReceiveCallback);
+:mScreen(&iScreen) {
 }
 
 //-------------------------------------------------------------------------------------------------
 
 RgbScreenServer::~RgbScreenServer() {
-   Wire.onReceive(0);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void RgbScreenServer::receive(int iNumberOfBytes) {
-
-   uint8_t* data = new uint8_t[iNumberOfBytes];
-   int i = 0;
-   while(Wire.available() && i < iNumberOfBytes) {
-      if (Wire.available()) {
-         data[i] = Wire.read();
-         i++;
-      }
-   }
-
-   switch(data[0]) {
+void RgbScreenServer::handleRequest(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut) {
+   uint8_t command = 255;
+   iIn >> command;
+   switch (command) {
       case RgbScreenProxy::SET_PIXEL : {
-         setPixel(data);
+         setPixel(iIn,oOut);
       } break;
       case RgbScreenProxy::FILL : {
-         fill(data);
+         fill(iIn,oOut);
       } break;
       case RgbScreenProxy::REPAINT : {
-         repaint(data);
+         repaint(iIn,oOut);
       } break;
       default : {
       } break;
    }
-
-   delete data;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void RgbScreenServer::setPixel(uint8_t iData[]) {
-   mScreen->setPixel(iData[1],iData[2],Color(iData[3],iData[4],iData[5]));
+void RgbScreenServer::setPixel(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut) {
+   uint8_t x = 0;
+   uint8_t y = 0;
+   iIn >> x >> y;
+   Color color(iIn);
+   mScreen->setPixel(x,y,color);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void RgbScreenServer::fill(uint8_t iData[]) {
-   mScreen->fill(Color(iData[1],iData[2],iData[3]));
+void RgbScreenServer::fill(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut) {
+   Color color(iIn);
+   mScreen->fill(color);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void RgbScreenServer::repaint(uint8_t iData[]) {
+void RgbScreenServer::repaint(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut) {
    mScreen->repaint();
 }
 

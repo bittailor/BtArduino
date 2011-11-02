@@ -12,6 +12,8 @@
 #define INC__Bt_Ui_Color__hpp
 
 #include <stdint.h>
+#include "Bt/Com/I_OutputPackage.hpp"
+#include "Bt/Com/I_InputPackage.hpp"
 
 namespace Bt {
 namespace Ui {
@@ -27,7 +29,16 @@ class Color
       : mRed(iRed), mGreen(iGreen), mBlue(iBlue) {
       }
 
+      explicit Color(Com::I_InputPackage& iIn)
+      : mRed(0), mGreen(0), mBlue(0) {
+         iIn >> mRed >> mGreen >> mBlue;
+      }
+
       ~Color() {
+      }
+
+      void serialize(Com::I_OutputPackage& iOut) const {
+         iOut << mRed << mGreen << mBlue;
       }
 
       bool operator==(const Color iColor) {
