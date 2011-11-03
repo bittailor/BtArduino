@@ -31,37 +31,37 @@ BinaryInputPackage::~BinaryInputPackage() {
 
 //-------------------------------------------------------------------------------------------------
 
-I_InputPackage& BinaryInputPackage::operator>>(bool& oValue) {
+bool BinaryInputPackage::readBool() {
    int16_t value = mBuffer->get();
    if (value != EOF) {
       if (value == 0) {
-         oValue = false;
+         return false;
 
       } else {
-         oValue = true;
+         return true;
       }
    }
-   return *this;
+   return false;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-I_InputPackage& BinaryInputPackage::operator>>(int8_t& oValue) {
+int8_t BinaryInputPackage::readInt8() {
    int16_t value = mBuffer->get();
    if (value != EOF) {
-      oValue = static_cast<int8_t>(value);
+      return static_cast<int8_t>(value);
    }
-   return *this;
+   return 0;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-I_InputPackage& BinaryInputPackage::operator>>(uint8_t& oValue) {
+uint8_t BinaryInputPackage::readUInt8() {
    int16_t value = mBuffer->get();
    if (value != EOF) {
-      oValue = value;
+      return value;
    }
-   return *this;
+   return 0;
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -21,13 +21,10 @@ namespace Com {
 class InputPackageGMock : public I_InputPackage {
    public:
       
-      virtual I_InputPackage& operator>>(bool& oValue) {return stream(oValue);}
-      virtual I_InputPackage& operator>>(int8_t& oValue) {return stream(oValue);}
-      virtual I_InputPackage& operator>>(uint8_t& oValue) {return stream(oValue);}
+      MOCK_METHOD0(readBool, bool ());
+      MOCK_METHOD0(readInt8, int8_t ());
+      MOCK_METHOD0(readUInt8, uint8_t ());
 
-      MOCK_METHOD1(stream,I_InputPackage& (bool& oValue));
-      MOCK_METHOD1(stream,I_InputPackage& (int8_t& oValue));
-      MOCK_METHOD1(stream,I_InputPackage& (uint8_t& oValue));
 };
 
 } // namespace Com

@@ -21,9 +21,25 @@ class I_InputPackage {
    public:
       virtual ~I_InputPackage() {}
 
-      virtual I_InputPackage& operator>>(bool& oValue) = 0;
-      virtual I_InputPackage& operator>>(int8_t& oValue) = 0;
-      virtual I_InputPackage& operator>>(uint8_t& oValue) = 0;
+      virtual bool readBool() = 0;
+      virtual int8_t readInt8() = 0;
+      virtual uint8_t readUInt8() = 0;
+
+      // TODO do it with traits !
+      I_InputPackage& operator>>(bool& oValue) {
+         oValue = readBool();
+         return *this;
+      }
+
+      I_InputPackage& operator>>(int8_t& oValue) {
+         oValue = readInt8();
+         return *this;
+      }
+
+      I_InputPackage& operator>>(uint8_t& oValue) {
+         oValue = readUInt8();
+         return *this;
+      }
 
 };
 

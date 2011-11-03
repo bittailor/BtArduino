@@ -21,9 +21,26 @@ class I_OutputPackage {
    public:
       virtual ~I_OutputPackage() {}
 
-      virtual I_OutputPackage& operator<<(bool iValue) = 0;
-      virtual I_OutputPackage& operator<<(int8_t iValue) = 0;
-      virtual I_OutputPackage& operator<<(uint8_t iValue) = 0;
+      virtual I_OutputPackage& write(bool iValue) = 0;
+      virtual I_OutputPackage& write(int8_t iValue) = 0;
+      virtual I_OutputPackage& write(uint8_t iValue) = 0;
+
+
+      // TODO do it with traits !
+      I_OutputPackage& operator<<(bool iValue) {
+         write(iValue);
+         return *this;
+      }
+
+      I_OutputPackage& operator<<(int8_t iValue){
+         write(iValue);
+         return *this;
+      }
+
+      I_OutputPackage& operator<<(uint8_t iValue){
+         write(iValue);
+         return *this;
+      }
 
       template<typename T>
       I_OutputPackage& operator<<(const T& iValue) {

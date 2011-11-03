@@ -23,10 +23,10 @@ class BinaryInputPackage : public I_InputPackage
       BinaryInputPackage(I_PackageBuffer& iBuffer);
       ~BinaryInputPackage();
 
-      virtual I_InputPackage& operator>>(bool& oValue);
-      virtual I_InputPackage& operator>>(int8_t& oValue);
-      virtual I_InputPackage& operator>>(uint8_t& oValue);
-   
+      virtual bool readBool();
+      virtual int8_t readInt8();
+      virtual uint8_t readUInt8();
+
    private:
    	  // Constructor to prohibit copy construction.
       BinaryInputPackage(const BinaryInputPackage&);

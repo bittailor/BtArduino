@@ -23,9 +23,9 @@ class BinaryOutputPackage : public I_OutputPackage
       BinaryOutputPackage(I_PackageBuffer& iBuffer);
       ~BinaryOutputPackage();
 
-      virtual I_OutputPackage& operator<<(bool iValue);
-      virtual I_OutputPackage& operator<<(int8_t iValue);
-      virtual I_OutputPackage& operator<<(uint8_t iValue);
+      virtual I_OutputPackage& write(bool iValue);
+      virtual I_OutputPackage& write(int8_t iValue);
+      virtual I_OutputPackage& write(uint8_t iValue);
    
    private:
    	  // Constructor to prohibit copy construction.
