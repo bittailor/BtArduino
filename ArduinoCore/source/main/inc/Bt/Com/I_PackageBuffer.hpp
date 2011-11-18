@@ -23,6 +23,10 @@ class I_PackageBuffer {
       
       virtual size_t put(uint8_t) = 0;
       virtual int16_t get() = 0;
+      virtual void clear() = 0;
+
+      virtual uint8_t* raw() = 0;
+      virtual size_t length() const = 0;
 };
 
 } // namespace Com

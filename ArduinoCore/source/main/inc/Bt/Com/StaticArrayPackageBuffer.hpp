@@ -47,6 +47,19 @@ class StaticArrayPackageBuffer : public I_PackageBuffer
          }
          return EOF;
       }
+
+      virtual void clear() {
+         mPutPosition = 0;
+         mGetPosition = 0;
+      }
+
+      virtual uint8_t* raw() {
+         return &mData[mGetPosition];
+      }
+
+      virtual size_t length() const {
+         return mPutPosition - mGetPosition;
+      }
    
    private:
    	  // Constructor to prohibit copy construction.

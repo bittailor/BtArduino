@@ -10,9 +10,13 @@ project ArduinoCore/main
 
 excludes = DigitalOutput.cpp , Colorduino.cpp , RgbScreenProxy.cpp ;
 
-
-lib ArduinoCore : [ glob-tree *.cpp : $(excludes)  ]                                      :              :                  ;
+# target
 lib ArduinoCore : 
     [ glob-tree *.cpp                ] 
     /ArduinoLibrary/main//ArduinoLibrary : 
     <toolset>avr ;
+
+# host
+lib ArduinoCore : 
+    [ glob-tree *.cpp : $(excludes)  ] 
+    /ArduinoLibrary/main//ArduinoLibrary ;
