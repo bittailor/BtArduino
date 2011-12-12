@@ -29,7 +29,6 @@ class TwoWireServerTest : public ::testing::Test {
 
       }
 
-
       virtual void SetUp() {
          ASSERT_TRUE(mReceive != 0);
          ASSERT_TRUE(mTransmit != 0);
@@ -72,6 +71,12 @@ void checkDoHandleRequest(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut) 
    oOut.write(value);
 }
 
+uint8_t checkAnswerSizeHandleRequest(const uint8_t* data, uint8_t length) {
+   EXPECT_EQ(1,length);
+   EXPECT_EQ(2,data[0]);
+   return 0;
+}
+
 uint8_t checkAnswerHandleRequest(const uint8_t* data, uint8_t length) {
    EXPECT_EQ(2,length);
    EXPECT_EQ(77,data[0]);
@@ -85,11 +90,15 @@ TEST_F(TwoWireServerTest, handleRequest) {
    EXPECT_CALL(mRequestHandler,handleRequest(_,_))
       .WillOnce(Invoke(checkDoHandleRequest));
 
+   EXPECT_CALL(mTwi,transmit(_,1))
+         .WillOnce(Invoke(checkAnswerSizeHandleRequest));
+
    EXPECT_CALL(mTwi,transmit(_,2))
-      .WillOnce(Invoke(checkAnswerHandleRequest));
+         .WillOnce(Invoke(checkAnswerHandleRequest));
 
 
    mReceive(buffer,HANDLE_REQUEST_SIZE);
+   mTransmit();
    mTransmit();
 }
 

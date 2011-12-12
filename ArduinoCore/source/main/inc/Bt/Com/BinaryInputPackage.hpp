@@ -23,6 +23,8 @@ class BinaryInputPackage : public I_InputPackage
       BinaryInputPackage(I_PackageBuffer& iBuffer);
       ~BinaryInputPackage();
 
+      virtual I_PackageBuffer& buffer();
+
       virtual bool readBool();
       virtual int8_t readInt8();
       virtual uint8_t readUInt8();

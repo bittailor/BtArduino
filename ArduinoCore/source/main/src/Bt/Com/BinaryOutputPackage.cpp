@@ -26,7 +26,11 @@ BinaryOutputPackage::BinaryOutputPackage(I_PackageBuffer& iBuffer)
 BinaryOutputPackage::~BinaryOutputPackage() {
 
 }
+//-------------------------------------------------------------------------------------------------
 
+I_PackageBuffer& BinaryOutputPackage::buffer() {
+   return *mBuffer;
+}
 //-------------------------------------------------------------------------------------------------
 
 I_OutputPackage& BinaryOutputPackage::write(bool iValue) {

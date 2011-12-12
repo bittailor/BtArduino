@@ -21,6 +21,8 @@ namespace Com {
 class OutputPackageGMock : public I_OutputPackage {
    public:
       
+     MOCK_METHOD0(buffer, I_PackageBuffer& ());
+
      MOCK_METHOD1(write,I_OutputPackage& (bool oValue));
      MOCK_METHOD1(write,I_OutputPackage& (int8_t oValue));
      MOCK_METHOD1(write,I_OutputPackage& (uint8_t oValue));

@@ -20,7 +20,7 @@ extern "C" {
 #include "Bt/Com/StaticArrayPackageBuffer.hpp"
 #include "Bt/Com/BinaryInputPackage.hpp"
 #include "Bt/Com/BinaryOutputPackage.hpp"
-#include <Bt/Com/I_RequestHandler.hpp>
+#include <Bt/Com/I_RequestServer.hpp>
 
 namespace Bt {
 namespace Com {
@@ -29,7 +29,7 @@ template<typename Twi>
 class TwoWireServer 
 {
    public:
-      TwoWireServer(Twi& twi, uint8_t address, I_RequestHandler& iHandler);
+      TwoWireServer(Twi& twi, uint8_t address, I_RequestServer& iHandler);
       ~TwoWireServer();
    
    private:
@@ -47,7 +47,8 @@ class TwoWireServer
       BinaryInputPackage mInput;
       StaticArrayPackageBuffer<TWI_BUFFER_LENGTH> mOutputBuffer;
       BinaryOutputPackage mOutput;
-      I_RequestHandler* mHandler;
+      bool mAnswerLengthSent;
+      I_RequestServer* mHandler;
 
 
       static TwoWireServer* sInstance;
@@ -81,8 +82,8 @@ void TwoWireServer<Twi>::onReceiveService(uint8_t* iData, int iNumberOfBytes) {
 //-------------------------------------------------------------------------------------------------
 
 template<typename Twi>
-TwoWireServer<Twi>::TwoWireServer(Twi& twi, uint8_t address, I_RequestHandler& iHandler)
-:mTwi(&twi), mInput(mInputBuffer), mOutput(mOutputBuffer), mHandler(&iHandler) {
+TwoWireServer<Twi>::TwoWireServer(Twi& twi, uint8_t address, I_RequestServer& iHandler)
+:mTwi(&twi), mInput(mInputBuffer), mOutput(mOutputBuffer), mAnswerLengthSent(false), mHandler(&iHandler) {
    if (sInstance == 0) {
       sInstance = this;
       mTwi->setAddress(address);
@@ -104,9 +105,16 @@ TwoWireServer<Twi>::~TwoWireServer() {
 
 template<typename Twi>
 void TwoWireServer<Twi>::request(void) {
-   if(mTwi->transmit(mOutputBuffer.raw(), mOutputBuffer.length()) == 0) ;
-   {
-      mOutputBuffer.clear();
+   if (mAnswerLengthSent) {
+      if(mTwi->transmit(mOutputBuffer.raw(), mOutputBuffer.length()) == 0) ;
+      {
+         mOutputBuffer.clear();
+      }
+   } else {
+      uint8_t length = mOutputBuffer.length();
+      if (mTwi->transmit(&length, 1) == 0) {
+         mAnswerLengthSent = true;
+      }
    }
 }
 
@@ -116,6 +124,7 @@ template<typename Twi>
 void TwoWireServer<Twi>::receive(uint8_t* iData, int iNumberOfBytes ) {
    mOutputBuffer.clear();
    mInputBuffer.clear();
+   mAnswerLengthSent = false;
    for (int i = 0; i < iNumberOfBytes; ++i) {
       mInputBuffer.put(iData[i]);
    }

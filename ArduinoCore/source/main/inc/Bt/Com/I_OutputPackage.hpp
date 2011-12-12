@@ -14,12 +14,16 @@
 
 #include <stdint.h>
 
+#include "Bt/Com/I_PackageBuffer.hpp"
+
 namespace Bt {
 namespace Com {
 
 class I_OutputPackage {
    public:
       virtual ~I_OutputPackage() {}
+
+      virtual I_PackageBuffer& buffer() = 0;
 
       virtual I_OutputPackage& write(bool iValue) = 0;
       virtual I_OutputPackage& write(int8_t iValue) = 0;

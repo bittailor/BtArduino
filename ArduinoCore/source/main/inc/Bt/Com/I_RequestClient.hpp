@@ -4,26 +4,27 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-//  Bt::Com::RequestHandlerGMock
+//  Bt::Com::I_RequestClient
 //  
 //*************************************************************************************************
 
-#ifndef INC__Bt_Com_RequestHandlerGMock__hpp
-#define INC__Bt_Com_RequestHandlerGMock__hpp
+#ifndef INC__Bt_Com_I_RequestClient__hpp
+#define INC__Bt_Com_I_RequestClient__hpp
 
-#include <gmock/gmock.h>
-
-#include "Bt/Com/I_RequestServer.hpp"
+#include "Bt/Com/I_InputPackage.hpp"
+#include "Bt/Com/I_OutputPackage.hpp"
 
 namespace Bt {
 namespace Com {
 
-class RequestHandlerGMock : public I_RequestServer {
+class I_RequestClient {
    public:
-      MOCK_METHOD2(handleRequest,void (Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut));
+      virtual ~I_RequestClient() {}
+      
+      virtual void sendRequest(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut) = 0;
 };
 
 } // namespace Com
 } // namespace Bt
 
-#endif // INC__Bt_Com_RequestHandlerGMock__hpp
+#endif // INC__Bt_Com_I_RequestClient__hpp

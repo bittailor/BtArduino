@@ -9,6 +9,7 @@
 //*************************************************************************************************
 
 #include "Bt/Com/TwoWireServer.hpp"
+#include "Bt/Com/TwoWireClient.hpp"
 
 namespace Bt {
 namespace Com {
@@ -36,7 +37,7 @@ void TwoWireServer::onReceiveService(uint8_t* iData, int iNumberOfBytes) {
 
 //-------------------------------------------------------------------------------------------------
 
-TwoWireServer::TwoWireServer(uint8_t address, I_RequestHandler& iHandler)
+TwoWireServer::TwoWireServer(uint8_t address, I_RequestServer& iHandler)
 :mInput(mInputBuffer), mOutput(mOutputBuffer), mHandler(&iHandler) {
    if (sInstance == 0) {
       twi_setAddress(address);

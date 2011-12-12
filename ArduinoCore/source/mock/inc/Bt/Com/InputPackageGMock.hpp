@@ -21,6 +21,8 @@ namespace Com {
 class InputPackageGMock : public I_InputPackage {
    public:
       
+      MOCK_METHOD0(buffer, I_PackageBuffer& ());
+
       MOCK_METHOD0(readBool, bool ());
       MOCK_METHOD0(readInt8, int8_t ());
       MOCK_METHOD0(readUInt8, uint8_t ());

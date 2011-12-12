@@ -4,12 +4,12 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-//  Bt::Com::I_RequestHandler
+//  Bt::Com::I_RequestServer
 //  
 //*************************************************************************************************
 
-#ifndef INC__Bt_Com_I_RequestHandler__hpp
-#define INC__Bt_Com_I_RequestHandler__hpp
+#ifndef INC__Bt_Com_I_RequestServer__hpp
+#define INC__Bt_Com_I_RequestServer__hpp
 
 #include "Bt/Com/I_InputPackage.hpp"
 #include "Bt/Com/I_OutputPackage.hpp"
@@ -17,9 +17,9 @@
 namespace Bt {
 namespace Com {
 
-class I_RequestHandler {
+class I_RequestServer {
    public:
-      virtual ~I_RequestHandler() {}
+      virtual ~I_RequestServer() {}
       
       virtual void handleRequest(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut) = 0;
 };
@@ -27,4 +27,4 @@ class I_RequestHandler {
 } // namespace Com
 } // namespace Bt
 
-#endif // INC__Bt_Com_I_RequestHandler__hpp
+#endif // INC__Bt_Com_I_RequestServer__hpp

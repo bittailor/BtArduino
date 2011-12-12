@@ -31,6 +31,12 @@ BinaryInputPackage::~BinaryInputPackage() {
 
 //-------------------------------------------------------------------------------------------------
 
+I_PackageBuffer& BinaryInputPackage::buffer() {
+   return *mBuffer;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 bool BinaryInputPackage::readBool() {
    int16_t value = mBuffer->get();
    if (value != EOF) {

@@ -13,13 +13,13 @@
 
 #include "Bt/Ui/I_RgbScreen.hpp"
 
-#include <Bt/Com/I_RequestHandler.hpp>
+#include <Bt/Com/I_RequestServer.hpp>
 #include <Bt/Util/Singleton.hpp>
 
 namespace Bt {
 namespace Ui {
 
-class RgbScreenServer : public Com::I_RequestHandler
+class RgbScreenServer : public Com::I_RequestServer
 {
    public:
 
