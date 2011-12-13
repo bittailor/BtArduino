@@ -11,7 +11,14 @@
 #ifndef INC__Bt_Com_TwoWireClient__hpp
 #define INC__Bt_Com_TwoWireClient__hpp
 
+extern "C" {
+   #include "twi.h"
+}
+
 #include "Bt/Com/I_RequestClient.hpp"
+#include "Bt/Com/StaticArrayPackageBuffer.hpp"
+#include "Bt/Com/BinaryInputPackage.hpp"
+#include "Bt/Com/BinaryOutputPackage.hpp"
 #include "Bt/Util/Delay.hpp"
 
 namespace Bt {
@@ -24,7 +31,10 @@ class TwoWireClient : public I_RequestClient
       TwoWireClient(Twi& twi, uint8_t serverAddress);
       ~TwoWireClient();
 
-      virtual void sendRequest(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut);
+      virtual Com::I_OutputPackage& out();
+      virtual Com::I_InputPackage& in();
+
+      virtual void sendRequest();
 
    private:
    	  // Constructor to prohibit copy construction.
@@ -33,11 +43,14 @@ class TwoWireClient : public I_RequestClient
       // Operator= to prohibit copy assignment
       TwoWireClient& operator=(const TwoWireClient&);
 
-      uint8_t send(uint8_t* iData, uint8_t iLength);
+      uint8_t send();
 
       Twi* mTwi;
       uint8_t mAddress;
-
+      StaticArrayPackageBuffer<TWI_BUFFER_LENGTH> mInputBuffer;
+      BinaryInputPackage mInput;
+      StaticArrayPackageBuffer<TWI_BUFFER_LENGTH> mOutputBuffer;
+      BinaryOutputPackage mOutput;
       static bool sInitDone;
 
 };
@@ -51,23 +64,44 @@ bool TwoWireClient<Twi>::sInitDone = false;
 
 template<typename Twi>
 TwoWireClient<Twi>::TwoWireClient(Twi& twi, uint8_t address)
-:mTwi(&twi), mAddress(address) {
+:mTwi(&twi), mAddress(address), mInput(mInputBuffer), mOutput(mOutputBuffer) {
    if(!sInitDone) {
       sInitDone = true;
-      twi_init();
+      mTwi->init();
    }
 }
 
 //-------------------------------------------------------------------------------------------------
 
 template<typename Twi>
-void TwoWireClient<Twi>::sendRequest(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut) {
-   uint8_t status = this->send(iIn.buffer().raw(),iIn.buffer().length());
+TwoWireClient<Twi>::~TwoWireClient() {
+
+}
+
+//-------------------------------------------------------------------------------------------------
+
+template<typename Twi>
+Com::I_OutputPackage& TwoWireClient<Twi>::out() {
+   return mOutput;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+template<typename Twi>
+Com::I_InputPackage& TwoWireClient<Twi>::in() {
+   return mInput;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+template<typename Twi>
+void TwoWireClient<Twi>::sendRequest() {
+   uint8_t status = this->send();
    if (status != 0) {
       uint8_t retry = 0;
       while (status != 0) {
          Util::delayInMilliseconds(retry);
-         status = send();
+         status = this->send();
          retry++;
          if (retry > 20) {
             // TODO error handling
@@ -75,23 +109,24 @@ void TwoWireClient<Twi>::sendRequest(Com::I_InputPackage& iIn, Com::I_OutputPack
          }
       }
    }
-   iIn.buffer().clear();
+   mOutputBuffer.clear();
+   mInputBuffer.clear();
 
    uint8_t answerLentgh = 0;
 
    mTwi->readFrom(mAddress,&answerLentgh,1);
 
    if(answerLentgh > 0) {
-      uint8_t read = mTwi->readFrom(mAddress,iIn.buffer().raw(),answerLentgh);
-      oOut.buffer().filled(read);
+      uint8_t read = mTwi->readFrom(mAddress,mInputBuffer.raw(),answerLentgh);
+      mInputBuffer.filled(read);
    }
 }
 
 //-------------------------------------------------------------------------------------------------
 
 template<typename Twi>
-uint8_t TwoWireClient<Twi>::send(uint8_t* iData, uint8_t iLength) {
-   return mTwi->writeTo(mAddress, iData, iLength, 1);
+uint8_t TwoWireClient<Twi>::send() {
+   return mTwi->writeTo(mAddress,mOutputBuffer.raw(),mOutputBuffer.length(),1);
 }
 
 //-------------------------------------------------------------------------------------------------

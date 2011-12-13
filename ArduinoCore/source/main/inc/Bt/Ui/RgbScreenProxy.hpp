@@ -12,6 +12,7 @@
 #define INC__Bt_Ui_RgbScreenProxy__hpp
 
 #include "Bt/Ui/I_RgbScreen.hpp"
+#include "Bt/Com/I_RequestClient.hpp"
 
 namespace Bt {
 namespace Ui {
@@ -25,7 +26,7 @@ class RgbScreenProxy : public I_RgbScreen
          REPAINT
       };
 
-      RgbScreenProxy(uint8_t iRemoteAddress);
+      RgbScreenProxy(Bt::Com::I_RequestClient& iClient);
       ~RgbScreenProxy();
 
       virtual size_t width();
@@ -43,9 +44,8 @@ class RgbScreenProxy : public I_RgbScreen
       // Operator= to prohibit copy assignment
       RgbScreenProxy& operator=(const RgbScreenProxy&);
 
-      void send();
+      Bt::Com::I_RequestClient* client;
 
-      uint8_t mRemoteAddress;
 };
 
 } // namespace Ui

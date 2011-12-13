@@ -10,17 +10,14 @@
 
 #include "Bt/Ui/RgbScreenProxy.hpp"
 
-#include "Arduino.h"
-#include <Wire.h>
-
 namespace Bt {
 namespace Ui {
 
 
 //-------------------------------------------------------------------------------------------------
 
-RgbScreenProxy::RgbScreenProxy(uint8_t iRemoteAddress)
-: mRemoteAddress(iRemoteAddress){
+RgbScreenProxy::RgbScreenProxy(Bt::Com::I_RequestClient& iClient)
+: client(&iClient) {
 
 }
 
@@ -47,42 +44,22 @@ size_t RgbScreenProxy::height() {
 //-------------------------------------------------------------------------------------------------
 
 void RgbScreenProxy::setPixel(uint8_t iX, uint8_t iY, Color iColor) {
-   Wire.beginTransmission(mRemoteAddress);
-   uint8_t data[] = {SET_PIXEL,iX,iY,iColor.red(),iColor.green(),iColor.blue()};
-   Wire.write(data,sizeof(data)/sizeof(data[0]));
-   send();
+   client->out() << static_cast<uint8_t>(SET_PIXEL) << iX << iY << iColor;
+   client->sendRequest();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void RgbScreenProxy::fill(Color iColor) {
-   Wire.beginTransmission(mRemoteAddress);
-   uint8_t data[] = {FILL,iColor.red(),iColor.green(),iColor.blue()};
-   Wire.write(data,sizeof(data)/sizeof(data[0]));
-   send();
+   client->out() << static_cast<uint8_t>(FILL) << iColor;
+   client->sendRequest();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void RgbScreenProxy::repaint() {
-   Wire.beginTransmission(mRemoteAddress);
-   uint8_t data[] = {REPAINT};
-   Wire.write(data,sizeof(data)/sizeof(data[0]));
-   send();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void RgbScreenProxy::send() {
-   uint8_t status = Wire.endTransmission();
-   if (status != 0) {
-      uint8_t retry = 0;
-      while (status != 0 && retry < 20) {
-         delayMicroseconds(retry);
-         status = Wire.endTransmission();
-         retry++;
-      }
-   }
+   client->out() << static_cast<uint8_t>(REPAINT);
+   client->sendRequest();
 }
 
 //-------------------------------------------------------------------------------------------------

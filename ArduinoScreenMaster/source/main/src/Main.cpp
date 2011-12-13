@@ -9,10 +9,11 @@
 //*************************************************************************************************
 
 #include <Arduino.h>
-#include <Wire.h>
 #include <Bt/Ui/Colorduino.hpp>
 #include <Bt/Ui/RgbScreenProxy.hpp>
 #include <Bt/Ui/CompoundRgbScreen.hpp>
+#include <Bt/Com/TwoWireClient.hpp>
+#include <Bt/Com/Twi.hpp>
 
 
 int main() {
@@ -20,10 +21,13 @@ int main() {
 
    //Serial.begin(9600);
 
-   Wire.begin();
+   Bt::Com::Twi twi;
 
-   Bt::Ui::RgbScreenProxy proxy1(1);
-   Bt::Ui::RgbScreenProxy proxy2(2);
+   Bt::Com::TwoWireClient<Bt::Com::Twi> server1(twi,1);
+   Bt::Com::TwoWireClient<Bt::Com::Twi> server2(twi,2);
+
+   Bt::Ui::RgbScreenProxy proxy1(server1);
+   Bt::Ui::RgbScreenProxy proxy2(server2);
    Bt::Util::StaticMatrix<Bt::Ui::I_RgbScreen*,1,2> screens;
    screens(0,0) = &proxy1;
    screens(0,1) = &proxy2;

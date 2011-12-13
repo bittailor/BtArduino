@@ -12,6 +12,8 @@
 #include <Wire.h>
 #include <Bt/Ui/Colorduino.hpp>
 #include <Bt/Ui/RgbScreenServer.hpp>
+#include <Bt/Com/Twi.hpp>
+#include <Bt/Com/TwoWireServer.hpp>
 
 
 int main() {
@@ -19,9 +21,7 @@ int main() {
 
    //Serial.begin(9600);
 
-   uint8_t address = 2;
-
-   Wire.begin(address);
+   uint8_t address = 1;
 
    Bt::Ui::Colorduino colorduino;
 
@@ -38,6 +38,8 @@ int main() {
    }
 
    Bt::Ui::RgbScreenServer server(colorduino);
+   Bt::Com::Twi twi;
+   Bt::Com::TwoWireServer<Bt::Com::Twi> twiServer(twi,address,server);
 
    while(true) {
       delay(100);
