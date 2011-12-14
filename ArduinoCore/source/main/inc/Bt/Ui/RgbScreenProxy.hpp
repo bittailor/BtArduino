@@ -21,6 +21,8 @@ class RgbScreenProxy : public I_RgbScreen
 {
    public:
       enum {
+         WIDTH,
+         HEIGHT,
          SET_PIXEL,
          FILL,
          REPAINT
@@ -44,7 +46,9 @@ class RgbScreenProxy : public I_RgbScreen
       // Operator= to prohibit copy assignment
       RgbScreenProxy& operator=(const RgbScreenProxy&);
 
-      Bt::Com::I_RequestClient* client;
+      Bt::Com::I_RequestClient* mClient;
+      size_t mWidth;
+      size_t mHeight;
 
 };
 

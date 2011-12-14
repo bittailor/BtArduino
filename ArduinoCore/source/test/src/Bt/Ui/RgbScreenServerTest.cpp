@@ -97,6 +97,22 @@ TEST_F(RgbScreenServerTest, testSetPixelViaBinaryStreams) {
    mRgbScreenServer.handleRequest(mIn,mOutMock);
 }
 
+TEST_F(RgbScreenServerTest, testWidthViaBinaryStreams) {
+   uint8_t command = RgbScreenProxy::WIDTH;
+   uint8_t width = 5;
+
+   Com::BinaryOutputPackage out(mInBuffer);
+
+   out << command;
+
+   EXPECT_CALL(mScreen,width()).WillOnce(Return(width));
+
+   mRgbScreenServer.handleRequest(mIn,mOut);
+
+   EXPECT_EQ(1,mOutBuffer.length());
+   EXPECT_EQ(width,mOutBuffer.raw()[0]);
+}
+
 
 
 } // namespace Ui

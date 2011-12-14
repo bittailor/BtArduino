@@ -33,6 +33,12 @@ void RgbScreenServer::handleRequest(Com::I_InputPackage& iIn, Com::I_OutputPacka
    uint8_t command = 255;
    iIn >> command;
    switch (command) {
+      case RgbScreenProxy::WIDTH : {
+         oOut << static_cast<uint8_t>(mScreen->width());
+      } break;
+      case RgbScreenProxy::HEIGHT : {
+         oOut << static_cast<uint8_t>(mScreen->height());
+      } break;
       case RgbScreenProxy::SET_PIXEL : {
          setPixel(iIn,oOut);
       } break;

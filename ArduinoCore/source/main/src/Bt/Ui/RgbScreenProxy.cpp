@@ -17,7 +17,7 @@ namespace Ui {
 //-------------------------------------------------------------------------------------------------
 
 RgbScreenProxy::RgbScreenProxy(Bt::Com::I_RequestClient& iClient)
-: client(&iClient) {
+: mClient(&iClient), mWidth(0), mHeight(0) {
 
 }
 
@@ -30,36 +30,45 @@ RgbScreenProxy::~RgbScreenProxy() {
 //-------------------------------------------------------------------------------------------------
 
 size_t RgbScreenProxy::width() {
-   // TODO Bt: Get width from server
-   return 8;
+   if (mWidth == 0) {
+      mClient->out() << static_cast<uint8_t>(WIDTH);
+      mClient->sendRequest();
+      mWidth = mClient->in().readUInt8();
+   }
+
+   return mWidth;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 size_t RgbScreenProxy::height() {
-   // TODO Bt: Get height from server
-   return 8;
+   if (mHeight == 0) {
+      mClient->out() << static_cast<uint8_t>(HEIGHT);
+      mClient->sendRequest();
+      mHeight = mClient->in().readUInt8();
+   }
+   return mHeight;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void RgbScreenProxy::setPixel(uint8_t iX, uint8_t iY, Color iColor) {
-   client->out() << static_cast<uint8_t>(SET_PIXEL) << iX << iY << iColor;
-   client->sendRequest();
+   mClient->out() << static_cast<uint8_t>(SET_PIXEL) << iX << iY << iColor;
+   mClient->sendRequest();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void RgbScreenProxy::fill(Color iColor) {
-   client->out() << static_cast<uint8_t>(FILL) << iColor;
-   client->sendRequest();
+   mClient->out() << static_cast<uint8_t>(FILL) << iColor;
+   mClient->sendRequest();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void RgbScreenProxy::repaint() {
-   client->out() << static_cast<uint8_t>(REPAINT);
-   client->sendRequest();
+   mClient->out() << static_cast<uint8_t>(REPAINT);
+   mClient->sendRequest();
 }
 
 //-------------------------------------------------------------------------------------------------
