@@ -1,3 +1,6 @@
 [submodule "ArduinoLibrary"]
 	path = ArduinoLibrary
 	url = git@github.com:bittailor/ArduinoLibrary.git
+[submodule "AvrBoostBuild"]
+	path = AvrBoostBuild
+	url = git@github.com:bittailor/AvrBoostBuild.git
