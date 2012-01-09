@@ -15,11 +15,17 @@
 #include <Bt/Com/TwoWireClient.hpp>
 #include <Bt/Com/Twi.hpp>
 
+static const unsigned long STARTUP_DELAY = 2000 ; // 2s
+
 
 int main() {
+
+
    init();
 
    //Serial.begin(9600);
+
+   delay(STARTUP_DELAY);
 
    Bt::Com::Twi twi;
 
