@@ -15,7 +15,7 @@
 #include <Bt/Com/TwoWireClient.hpp>
 #include <Bt/Com/Twi.hpp>
 
-static const unsigned long STARTUP_DELAY = 2000 ; // 2s
+static const unsigned long STARTUP_DELAY = 3000 ; // 3s
 
 
 int main() {
