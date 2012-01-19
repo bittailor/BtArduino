@@ -1,12 +1,15 @@
 package ch.bittailor.bt.ui;
 
 import java.awt.Color;
-import java.io.BufferedReader;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import ch.bittailor.bt.com.TcpRequestClient;
 
@@ -23,44 +26,65 @@ public class RgbScreenClient {
 		
 		Color colors[] = new Color[] { 
 				Color.BLUE,
-				Color.GREEN,
 				Color.RED,
 				Color.YELLOW,
 				Color.CYAN};
 		
 		
 		
-		for (int i = 0; i < 5; i++) {			
-			System.out.println(i);
+		for (int i = 0; i < 5 ; i++) {			
+			//System.out.println(i);
+			
 			for (Color color : colors) {
+				
+				long start = System.nanoTime();
 				for (int y = 0; y < height; y++) {
 					for (int x = 0; x < width; x++) {
+						System.out.println("- " + x + "," + y + " " + color);
 						screen.setPixel(x, y, color);
-						
+						screen.repaint();
 					}
 				}
 				screen.repaint();
+				long end = System.nanoTime();
 			}
 		}	
 	}
 
-
-	private static void sleep() {
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	
 	public static void main(String[] args) {
 		
 		try {
-			Socket socket = new Socket("192.168.2.2",2000);
+			final Socket socket = new Socket("192.168.2.2",2000);
+
+			SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					JFrame frame = new JFrame("Reset");
+					JButton button = new JButton("Reset");
+					frame.getContentPane().add(button);
+					button.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							try {
+								socket.getOutputStream().write(0xAA);
+								socket.getOutputStream().flush();
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+					});
+					frame.pack();
+					frame.setVisible(true);
+					
+				}
+			});
+			
 			RgbScreenProxy screen = new RgbScreenProxy(new TcpRequestClient(socket));		
 			draw(screen);
+			System.exit(0);
 			
 			
 		} catch (UnknownHostException e) {

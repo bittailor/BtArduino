@@ -16,6 +16,7 @@
 #include "StaticArrayPackageBuffer.hpp"
 #include "BinaryInputPackage.hpp"
 #include "BinaryOutputPackage.hpp"
+#include "BT/Io/ShiftRegister.hpp"
 
 #include <Arduino.h>
 
@@ -54,6 +55,9 @@ class TcpServer
 
       typedef void (TcpServer<ServerSocket,Socket>::*StateFunction)();
 
+
+      Bt::Io::ShiftRegister mInfo;
+
       ServerSocket* mServerSocket;
       Socket mSocket;
       StateFunction mStateFunction;
@@ -74,7 +78,7 @@ class TcpServer
 
 template<typename ServerSocket, typename Socket>
 TcpServer<ServerSocket,Socket>::TcpServer(ServerSocket& iServerSocket, I_RequestServer& iHandler)
-: mServerSocket(&iServerSocket), mStateFunction(&TcpServer<ServerSocket,Socket>::waitForClient), mHandler(&iHandler), mSize(0) , mInput(mInputBuffer), mOutput(mOutputBuffer) {
+: mInfo(5,6,7), mServerSocket(&iServerSocket), mStateFunction(&TcpServer<ServerSocket,Socket>::waitForClient), mHandler(&iHandler), mSize(0) , mInput(mInputBuffer), mOutput(mOutputBuffer) {
 
 }
 
@@ -109,16 +113,17 @@ void TcpServer<ServerSocket,Socket>::waitForClient() {
 template<typename ServerSocket, typename Socket>
 void TcpServer<ServerSocket,Socket>::waitForRequest() {
    if (mSocket.available() <= 0) {
+      Serial.println("w 0");
       checkConnection();
       return;
    }
-
    int checkByte = mSocket.read();
+   Serial.print("w c ");
+   Serial.println(checkByte,HEX);
    if (checkByte == -1) {
       checkConnection();
       return;
    }
-
    if (checkByte != TCP_SERVER_CHECK_BYTE) {
       Serial.print("wrong check byte ");
       Serial.print(checkByte,HEX);
@@ -126,6 +131,7 @@ void TcpServer<ServerSocket,Socket>::waitForRequest() {
       Serial.print(TCP_SERVER_CHECK_BYTE,HEX);
       Serial.println(" => close connection");
       mSocket.stop();
+      mSocket = Socket();
       mStateFunction = &TcpServer<ServerSocket,Socket>::waitForClient;
       return;
    }
@@ -136,20 +142,19 @@ void TcpServer<ServerSocket,Socket>::waitForRequest() {
 
 template<typename ServerSocket, typename Socket>
 void TcpServer<ServerSocket,Socket>::readSize() {
-
    if (mSocket.available() <= 0) {
+      Serial.println("s 0");
       checkConnection();
       return;
    }
-
    int size = mSocket.read();
+   Serial.print("s s ");
+   Serial.println(size,HEX);
    if (size == -1) {
       checkConnection();
       return;
    }
-
    mSize = size;
-
    mInputBuffer.clear();
    mStateFunction = &TcpServer<ServerSocket,Socket>::readData;
 }
@@ -159,14 +164,22 @@ void TcpServer<ServerSocket,Socket>::readSize() {
 
 template<typename ServerSocket, typename Socket>
 void TcpServer<ServerSocket,Socket>::readData() {
+   // Serial.println("r");
    int available = mSocket.available();
    if (available <= 0) {
+      Serial.println("r 0");
       checkConnection();
       return;
    }
 
+   Serial.print("r a ");
+   Serial.println(available);
    size_t calculatedReadSize = calculateReadSize(available);
+   Serial.print("r c ");
+   Serial.println(calculatedReadSize);
    int read = mSocket.read(mInputBuffer.raw() + mInputBuffer.length(),calculatedReadSize);
+   Serial.print("r r ");
+   Serial.println(read);
    if (read == -1) {
       checkConnection();
       return;
@@ -180,12 +193,23 @@ void TcpServer<ServerSocket,Socket>::readData() {
 
    mOutputBuffer.clear();
 
+   Serial.println("h");
    mHandler->handleRequest(mInput,mOutput);
 
+   Serial.println("s c");
    mSocket.write(TCP_SERVER_CHECK_BYTE);
+
+   Serial.print("s l ");
+   Serial.println(mOutputBuffer.length());
    mSocket.write(mOutputBuffer.length());
+
    if (mOutputBuffer.length() > 0) {
+      Serial.println("s d");
       mSocket.write(mOutputBuffer.raw(),mOutputBuffer.length());
+   }
+
+   if(mSocket.getWriteError()) {
+      Serial.println("!!! WriteError !!!");
    }
 
    mStateFunction = &TcpServer<ServerSocket,Socket>::waitForRequest;
@@ -211,6 +235,7 @@ bool TcpServer<ServerSocket,Socket>::checkConnection() {
       Serial.println("connection lost => restart socket");
       mSocket.flush();
       mSocket.stop();
+      mSocket = Socket();
       mStateFunction = &TcpServer<ServerSocket,Socket>::waitForClient;
       return false;
    }
