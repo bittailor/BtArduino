@@ -55,7 +55,7 @@ TEST_F(RgbScreenProxyTest, setPixel) {
    Color color(60,70,80);
 
    EXPECT_CALL(mRequestClient,out()).WillRepeatedly(ReturnRef(mOut));
-   EXPECT_CALL(mRequestClient,sendRequest()).Times(1);
+   EXPECT_CALL(mRequestClient,sendActionRequest()).Times(1);
 
    mRgbScreenProxy.setPixel(x,y,color);
 
@@ -74,7 +74,7 @@ TEST_F(RgbScreenProxyTest, width) {
 
    EXPECT_CALL(mRequestClient,out()).WillRepeatedly(ReturnRef(mOut));
    EXPECT_CALL(mRequestClient,in()).WillRepeatedly(ReturnRef(mIn));
-   EXPECT_CALL(mRequestClient,sendRequest()).Times(1);
+   EXPECT_CALL(mRequestClient,sendQueryRequest()).Times(1);
 
    Com::BinaryOutputPackage out(mInBuffer);
    out << width;

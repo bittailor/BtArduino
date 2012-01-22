@@ -1,15 +1,9 @@
 package ch.bittailor.bt.ui;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import ch.bittailor.bt.com.TcpRequestClient;
 
@@ -37,62 +31,38 @@ public class RgbScreenClient {
 			
 			for (Color color : colors) {
 				
-				long start = System.nanoTime();
 				for (int y = 0; y < height; y++) {
 					for (int x = 0; x < width; x++) {
-						System.out.println("- " + x + "," + y + " " + color);
+						//System.out.println("- " + x + "," + y + " " + color);
+						//long start = System.nanoTime();
 						screen.setPixel(x, y, color);
 						screen.repaint();
+						//long end = System.nanoTime();
+						//System.out.println(" t " + ( end - start));
+						
 					}
 				}
-				screen.repaint();
-				long end = System.nanoTime();
+				//screen.repaint(); 
 			}
 		}	
 	}
 
 	public static void main(String[] args) {
 		
-		try {
-			final Socket socket = new Socket("192.168.2.2",2000);
-
-			SwingUtilities.invokeLater(new Runnable() {
-				
-				@Override
-				public void run() {
-					JFrame frame = new JFrame("Reset");
-					JButton button = new JButton("Reset");
-					frame.getContentPane().add(button);
-					button.addActionListener(new ActionListener() {
-						
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							try {
-								socket.getOutputStream().write(0xAA);
-								socket.getOutputStream().flush();
-							} catch (IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-						}
-					});
-					frame.pack();
-					frame.setVisible(true);
-					
-				}
-			});
-			
-			RgbScreenProxy screen = new RgbScreenProxy(new TcpRequestClient(socket));		
-			draw(screen);
-			System.exit(0);
-			
-			
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		for (int i = 0; i < 1000 ; i++) {
+			System.out.println("Loop " + i);		
+			try {
+				final Socket socket = new Socket("192.168.2.2",2000);			
+				RgbScreenProxy screen = new RgbScreenProxy(new TcpRequestClient(socket));		
+				draw(screen);
+				socket.close();			
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		

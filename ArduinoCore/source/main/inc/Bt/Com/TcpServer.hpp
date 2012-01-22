@@ -12,13 +12,9 @@
 #define INC__Bt_Com_TcpServer__hpp
 
 #include "I_RequestServer.hpp"
-#include "Socket.h"
 #include "StaticArrayPackageBuffer.hpp"
 #include "BinaryInputPackage.hpp"
 #include "BinaryOutputPackage.hpp"
-#include "BT/Io/ShiftRegister.hpp"
-
-#include <Arduino.h>
 
 namespace Bt {
 namespace Com {
@@ -55,9 +51,6 @@ class TcpServer
 
       typedef void (TcpServer<ServerSocket,Socket>::*StateFunction)();
 
-
-      Bt::Io::ShiftRegister mInfo;
-
       ServerSocket* mServerSocket;
       Socket mSocket;
       StateFunction mStateFunction;
@@ -78,7 +71,7 @@ class TcpServer
 
 template<typename ServerSocket, typename Socket>
 TcpServer<ServerSocket,Socket>::TcpServer(ServerSocket& iServerSocket, I_RequestServer& iHandler)
-: mInfo(5,6,7), mServerSocket(&iServerSocket), mStateFunction(&TcpServer<ServerSocket,Socket>::waitForClient), mHandler(&iHandler), mSize(0) , mInput(mInputBuffer), mOutput(mOutputBuffer) {
+: mServerSocket(&iServerSocket), mStateFunction(&TcpServer<ServerSocket,Socket>::waitForClient), mHandler(&iHandler), mSize(0) , mInput(mInputBuffer), mOutput(mOutputBuffer) {
 
 }
 
@@ -113,13 +106,13 @@ void TcpServer<ServerSocket,Socket>::waitForClient() {
 template<typename ServerSocket, typename Socket>
 void TcpServer<ServerSocket,Socket>::waitForRequest() {
    if (mSocket.available() <= 0) {
-      Serial.println("w 0");
+      // Serial.println("w 0");
       checkConnection();
       return;
    }
    int checkByte = mSocket.read();
-   Serial.print("w c ");
-   Serial.println(checkByte,HEX);
+   // Serial.print("w c ");
+   // Serial.println(checkByte,HEX);
    if (checkByte == -1) {
       checkConnection();
       return;
@@ -143,13 +136,13 @@ void TcpServer<ServerSocket,Socket>::waitForRequest() {
 template<typename ServerSocket, typename Socket>
 void TcpServer<ServerSocket,Socket>::readSize() {
    if (mSocket.available() <= 0) {
-      Serial.println("s 0");
+      // Serial.println("s 0");
       checkConnection();
       return;
    }
    int size = mSocket.read();
-   Serial.print("s s ");
-   Serial.println(size,HEX);
+   // Serial.print("s s ");
+   // Serial.println(size,HEX);
    if (size == -1) {
       checkConnection();
       return;
@@ -164,22 +157,21 @@ void TcpServer<ServerSocket,Socket>::readSize() {
 
 template<typename ServerSocket, typename Socket>
 void TcpServer<ServerSocket,Socket>::readData() {
-   // Serial.println("r");
    int available = mSocket.available();
    if (available <= 0) {
-      Serial.println("r 0");
+      // Serial.println("r 0");
       checkConnection();
       return;
    }
 
-   Serial.print("r a ");
-   Serial.println(available);
+   // Serial.print("r a ");
+   // Serial.println(available);
    size_t calculatedReadSize = calculateReadSize(available);
-   Serial.print("r c ");
-   Serial.println(calculatedReadSize);
+   // Serial.print("r c ");
+   // Serial.println(calculatedReadSize);
    int read = mSocket.read(mInputBuffer.raw() + mInputBuffer.length(),calculatedReadSize);
-   Serial.print("r r ");
-   Serial.println(read);
+   // Serial.print("r r ");
+   // Serial.println(read);
    if (read == -1) {
       checkConnection();
       return;
@@ -193,24 +185,26 @@ void TcpServer<ServerSocket,Socket>::readData() {
 
    mOutputBuffer.clear();
 
-   Serial.println("h");
+   // Serial.println("h");
    mHandler->handleRequest(mInput,mOutput);
 
-   Serial.println("s c");
-   mSocket.write(TCP_SERVER_CHECK_BYTE);
-
-   Serial.print("s l ");
-   Serial.println(mOutputBuffer.length());
-   mSocket.write(mOutputBuffer.length());
-
    if (mOutputBuffer.length() > 0) {
-      Serial.println("s d");
+
+      // Serial.println("s c");
+      mSocket.write(TCP_SERVER_CHECK_BYTE);
+
+      // Serial.print("s l ");
+      // Serial.println(mOutputBuffer.length());
+      mSocket.write(mOutputBuffer.length());
+
+      // Serial.println("s d");
       mSocket.write(mOutputBuffer.raw(),mOutputBuffer.length());
+
+      if(mSocket.getWriteError()) {
+         Serial.println("!!! WriteError !!!");
+      }
    }
 
-   if(mSocket.getWriteError()) {
-      Serial.println("!!! WriteError !!!");
-   }
 
    mStateFunction = &TcpServer<ServerSocket,Socket>::waitForRequest;
 

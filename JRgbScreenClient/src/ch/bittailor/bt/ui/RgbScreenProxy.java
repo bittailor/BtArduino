@@ -34,7 +34,7 @@ public class RgbScreenProxy implements IRgbScreen {
 	public int width() {
 		if (mWidth == 0) {
 			mClient.out().writeUInt8(Cmd.WIDTH.ordinal()); 
-			mClient.sendRequest();
+			mClient.sendQueryRequest();
 			mWidth = mClient.in().readUInt8();
 		}
 		return mWidth;
@@ -47,7 +47,7 @@ public class RgbScreenProxy implements IRgbScreen {
 	public int height() {      
 		if (mHeight == 0) {
 			mClient.out().writeUInt8(Cmd.HEIGHT.ordinal()); 
-			mClient.sendRequest();
+			mClient.sendQueryRequest();
 			mHeight = mClient.in().readUInt8();
 		}
 		return mHeight;
@@ -60,7 +60,7 @@ public class RgbScreenProxy implements IRgbScreen {
 	public void setPixel(int iX, int iY, Color iColor) {
 		mClient.out().writeUInt8(Cmd.SET_PIXEL.ordinal()).writeUInt8(iX).writeUInt8(iY);
 		addColor(mClient.out(),iColor);
-		mClient.sendRequest();
+		mClient.sendActionRequest();
 	}
 
 	/* (non-Javadoc)
@@ -70,7 +70,7 @@ public class RgbScreenProxy implements IRgbScreen {
 	public void fill(Color iColor) {
 		mClient.out().writeUInt8(Cmd.FILL.ordinal());
 		addColor(mClient.out(),iColor);
-		mClient.sendRequest();
+		mClient.sendActionRequest();
 	}
 
 	/* (non-Javadoc)
@@ -79,7 +79,7 @@ public class RgbScreenProxy implements IRgbScreen {
 	@Override
 	public void repaint() {
 		mClient.out().writeUInt8(Cmd.REPAINT.ordinal());
-		mClient.sendRequest();
+		mClient.sendActionRequest();
 	}
 	
 	private void addColor(IOutputPackage ioOut, Color iColor) {

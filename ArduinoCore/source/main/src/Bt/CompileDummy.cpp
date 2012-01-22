@@ -9,5 +9,5 @@
 //*************************************************************************************************
 
 #include "Bt/Com/TwoWireClient.hpp"
-#include "Bt/Com/TcpServer.hpp"
+//#include "Bt/Com/TcpServer.hpp"
 

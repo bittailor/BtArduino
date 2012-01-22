@@ -23,7 +23,8 @@ class RequestClientGMock : public I_RequestClient {
       
       MOCK_METHOD0(out,Com::I_OutputPackage& ());
       MOCK_METHOD0(in,Com::I_InputPackage& ());
-      MOCK_METHOD0(sendRequest,void());
+      MOCK_METHOD0(sendActionRequest,void());
+      MOCK_METHOD0(sendQueryRequest,void());
 
 
 };

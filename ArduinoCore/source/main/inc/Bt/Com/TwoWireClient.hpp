@@ -34,7 +34,8 @@ class TwoWireClient : public I_RequestClient
       virtual Com::I_OutputPackage& out();
       virtual Com::I_InputPackage& in();
 
-      virtual void sendRequest();
+      virtual void sendActionRequest();
+      virtual void sendQueryRequest();
 
    private:
    	  // Constructor to prohibit copy construction.
@@ -43,6 +44,9 @@ class TwoWireClient : public I_RequestClient
       // Operator= to prohibit copy assignment
       TwoWireClient& operator=(const TwoWireClient&);
 
+      void sendRequest();
+      void receiveAnswer();
+      void clearBuffers();
       uint8_t send();
 
       Twi* mTwi;
@@ -95,6 +99,23 @@ Com::I_InputPackage& TwoWireClient<Twi>::in() {
 //-------------------------------------------------------------------------------------------------
 
 template<typename Twi>
+void TwoWireClient<Twi>::sendActionRequest() {
+   sendRequest();
+   clearBuffers();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+template<typename Twi>
+void TwoWireClient<Twi>::sendQueryRequest() {
+   sendRequest();
+   clearBuffers();
+   receiveAnswer();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+template<typename Twi>
 void TwoWireClient<Twi>::sendRequest() {
    uint8_t status = this->send();
    if (status != 0) {
@@ -109,17 +130,27 @@ void TwoWireClient<Twi>::sendRequest() {
          }
       }
    }
-   mOutputBuffer.clear();
-   mInputBuffer.clear();
 
+}
+
+//-------------------------------------------------------------------------------------------------
+
+template<typename Twi>
+void TwoWireClient<Twi>::receiveAnswer() {
    uint8_t answerLentgh = 0;
-
    mTwi->readFrom(mAddress,&answerLentgh,1);
-
    if(answerLentgh > 0) {
       uint8_t read = mTwi->readFrom(mAddress,mInputBuffer.raw(),answerLentgh);
       mInputBuffer.filled(read);
    }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+template<typename Twi>
+void TwoWireClient<Twi>::clearBuffers() {
+   mOutputBuffer.clear();
+   mInputBuffer.clear();
 }
 
 //-------------------------------------------------------------------------------------------------

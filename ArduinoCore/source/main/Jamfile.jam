@@ -8,7 +8,7 @@ project ArduinoCore/main
 	   <include>inc 
 	;
 
-excludes = DigitalOutput.cpp , Colorduino.cpp ;
+excludes = DigitalOutput.cpp Colorduino.cpp ShiftRegister.cpp TcpServer.cpp ;
 
 # target
 lib ArduinoCore : 

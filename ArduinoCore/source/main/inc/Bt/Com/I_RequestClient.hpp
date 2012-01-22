@@ -24,7 +24,17 @@ class I_RequestClient {
       virtual Com::I_OutputPackage& out() = 0;
       virtual Com::I_InputPackage& in() = 0;
 
-      virtual void sendRequest() = 0;
+      /**
+       * Sends an action request.
+       * An action request is a request without return value.
+       */
+      virtual void sendActionRequest() = 0;
+
+      /**
+       * Sends a function request.
+       * An query request is a request with return value.
+       */
+      virtual void sendQueryRequest() = 0;
 };
 
 } // namespace Com

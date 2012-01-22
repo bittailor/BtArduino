@@ -106,8 +106,7 @@ TwoWireServer<Twi>::~TwoWireServer() {
 template<typename Twi>
 void TwoWireServer<Twi>::request(void) {
    if (mAnswerLengthSent) {
-      if(mTwi->transmit(mOutputBuffer.raw(), mOutputBuffer.length()) == 0) ;
-      {
+      if(mTwi->transmit(mOutputBuffer.raw(), mOutputBuffer.length()) == 0) {
          mOutputBuffer.clear();
       }
    } else {

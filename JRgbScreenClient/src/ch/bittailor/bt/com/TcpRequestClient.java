@@ -11,10 +11,10 @@ public class TcpRequestClient implements IRequestClient {
 	
 	private Socket mSocket;
 
-	private PackageBuffer mOutBuffer;
-	private IOutputPackage mOut;
-	private PackageBuffer mInBuffer;
-	private IInputPackage mIn;
+	private PackageBuffer mOutputBuffer;
+	private IOutputPackage mOutputPackage;
+	private PackageBuffer mInputBuffer;
+	private IInputPackage mInputPackage;
 	
 	
 	
@@ -25,55 +25,69 @@ public class TcpRequestClient implements IRequestClient {
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
-		mOutBuffer = new PackageBuffer(TCP_SERVER_BUFFER_LENGHT);
-		mOut = new BinaryOutputPackage(mOutBuffer);
-		mInBuffer = new PackageBuffer(TCP_SERVER_BUFFER_LENGHT);
-		mIn = new BinaryInputPackage(mInBuffer);
+		mOutputBuffer = new PackageBuffer(TCP_SERVER_BUFFER_LENGHT);
+		mOutputPackage = new BinaryOutputPackage(mOutputBuffer);
+		mInputBuffer = new PackageBuffer(TCP_SERVER_BUFFER_LENGHT);
+		mInputPackage = new BinaryInputPackage(mInputBuffer);
 	}
 
 	@Override
 	public IOutputPackage out() {
-		return mOut;
+		return mOutputPackage;
 	}
 
 	@Override
 	public IInputPackage in() {
-		return mIn;
+		return mInputPackage;
 	}
 
 	@Override
-	public void sendRequest() {
+	public void sendActionRequest() {
 		try {
+			send();
+			clearBuffers();
 			
-			mSocket.getOutputStream().write(CHECK_BYTE);
-			mSocket.getOutputStream().write(mOutBuffer.length());
-			mSocket.getOutputStream().write(mOutBuffer.raw(), 0, mOutBuffer.length());
-			mSocket.getOutputStream().flush();
-			
-			mOutBuffer.clear();
-			mInBuffer.clear();
-			
-			int checkByte = mSocket.getInputStream().read();
-			if ( checkByte != CHECK_BYTE) {
-				System.out.println("wrong check byte " + checkByte + " != " + CHECK_BYTE);
-				throw new RuntimeException("wrong check byte " + checkByte + " != " + CHECK_BYTE);
-			}
-			
-			int length = mSocket.getInputStream().read();
-			int read = 0;
-			while (read < length) {
-				read += mSocket.getInputStream().read(mInBuffer.raw(), read, (length-read));
-			}
-			mInBuffer.filled(length);
-			// Thread.sleep(1);
-						
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void sendQueryRequest() {
+		try {			
+			send();
+			clearBuffers();	
+			receive();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void send() throws IOException {
+		mSocket.getOutputStream().write(CHECK_BYTE);
+		mSocket.getOutputStream().write(mOutputBuffer.length());
+		mSocket.getOutputStream().write(mOutputBuffer.raw(), 0, mOutputBuffer.length());
+		mSocket.getOutputStream().flush();
+	}
+	
+	private void clearBuffers() {
+		mOutputBuffer.clear();
+		mInputBuffer.clear();
+	}
+	
+	private void receive() throws IOException {
+		int checkByte = mSocket.getInputStream().read();
+		if ( checkByte != CHECK_BYTE) {
+			System.out.println("wrong check byte " + checkByte + " != " + CHECK_BYTE);
+			throw new RuntimeException("wrong check byte " + checkByte + " != " + CHECK_BYTE);
+		}
+
+		int length = mSocket.getInputStream().read();
+		int read = 0;
+		while (read < length) {
+			read += mSocket.getInputStream().read(mInputBuffer.raw(), read, (length-read));
+		}
+		mInputBuffer.filled(length);
 	}
 
 }

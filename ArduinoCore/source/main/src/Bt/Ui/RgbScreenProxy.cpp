@@ -32,7 +32,7 @@ RgbScreenProxy::~RgbScreenProxy() {
 size_t RgbScreenProxy::width() {
    if (mWidth == 0) {
       mClient->out() << static_cast<uint8_t>(WIDTH);
-      mClient->sendRequest();
+      mClient->sendQueryRequest();
       mWidth = mClient->in().readUInt8();
    }
 
@@ -44,7 +44,7 @@ size_t RgbScreenProxy::width() {
 size_t RgbScreenProxy::height() {
    if (mHeight == 0) {
       mClient->out() << static_cast<uint8_t>(HEIGHT);
-      mClient->sendRequest();
+      mClient->sendQueryRequest();
       mHeight = mClient->in().readUInt8();
    }
    return mHeight;
@@ -54,21 +54,21 @@ size_t RgbScreenProxy::height() {
 
 void RgbScreenProxy::setPixel(uint8_t iX, uint8_t iY, Color iColor) {
    mClient->out() << static_cast<uint8_t>(SET_PIXEL) << iX << iY << iColor;
-   mClient->sendRequest();
+   mClient->sendActionRequest();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void RgbScreenProxy::fill(Color iColor) {
    mClient->out() << static_cast<uint8_t>(FILL) << iColor;
-   mClient->sendRequest();
+   mClient->sendActionRequest();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void RgbScreenProxy::repaint() {
    mClient->out() << static_cast<uint8_t>(REPAINT);
-   mClient->sendRequest();
+   mClient->sendActionRequest();
 }
 
 //-------------------------------------------------------------------------------------------------
