@@ -4,30 +4,36 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-//  Bt::Util::Delay
+//  Bt::Util::Time
 //  
 //*************************************************************************************************
 
-#include <unistd.h>
-#include <time.h>
+#include "Bt/Util/Time.hpp"
+#include "Bt/Util/Delay.hpp"
 
 namespace Bt {
 namespace Util {
 
+
 //-------------------------------------------------------------------------------------------------
 
-void delayInMilliseconds(unsigned int milliseconds) {
-   sleep(milliseconds);
+Time::Time() {
+
 }
 
 //-------------------------------------------------------------------------------------------------
 
-unsigned long microSeconds() {
-   return clock() / (CLOCKS_PER_SEC / 1000 ) ;
+Time::~Time() {
+
+}
+
+//-------------------------------------------------------------------------------------------------
+
+unsigned long Time::microSeconds() {
+   return Bt::Util::microSeconds();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 } // namespace Util
 } // namespace Bt
-

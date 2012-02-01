@@ -4,22 +4,24 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-//  Bt::Util::Delay
+//  Bt::Util::I_Time
 //  
 //*************************************************************************************************
 
-#ifndef INC__Bt_Util_Delay__hpp
-#define INC__Bt_Util_Delay__hpp
+#ifndef INC__Bt_Util_I_Time__hpp
+#define INC__Bt_Util_I_Time__hpp
 
 namespace Bt {
 namespace Util {
 
-unsigned long microSeconds();
-
-void delayInMilliseconds(unsigned int milliseconds);
+class I_Time {
+   public:
+      virtual ~I_Time() {}
+      
+      virtual unsigned long microSeconds() = 0;
+};
 
 } // namespace Util
-
 } // namespace Bt
 
-#endif // INC__Bt_Util_Delay__hpp
+#endif // INC__Bt_Util_I_Time__hpp

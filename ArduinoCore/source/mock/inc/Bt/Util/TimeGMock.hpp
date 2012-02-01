@@ -4,22 +4,27 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-//  Bt::Util::Delay
+//  Bt::Util::TimeGMock
 //  
 //*************************************************************************************************
 
-#ifndef INC__Bt_Util_Delay__hpp
-#define INC__Bt_Util_Delay__hpp
+#ifndef INC__Bt_Util_TimeGMock__hpp
+#define INC__Bt_Util_TimeGMock__hpp
+
+#include <gmock/gmock.h>
+
+#include "Bt/Util/I_Time.hpp"
 
 namespace Bt {
 namespace Util {
 
-unsigned long microSeconds();
+class TimeGMock : public I_Time {
+   public:
 
-void delayInMilliseconds(unsigned int milliseconds);
+      MOCK_METHOD0(microSeconds, unsigned long ());
+};
 
 } // namespace Util
-
 } // namespace Bt
 
-#endif // INC__Bt_Util_Delay__hpp
+#endif // INC__Bt_Util_TimeGMock__hpp

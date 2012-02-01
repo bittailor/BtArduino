@@ -4,30 +4,37 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-//  Bt::Util::Delay
+//  Bt::Workcycle::MainWorkcycle
 //  
 //*************************************************************************************************
 
-#include <unistd.h>
-#include <time.h>
+#include "Bt/Workcycle/MainWorkcycle.hpp"
 
 namespace Bt {
-namespace Util {
+namespace Workcycle {
+
 
 //-------------------------------------------------------------------------------------------------
 
-void delayInMilliseconds(unsigned int milliseconds) {
-   sleep(milliseconds);
+MainWorkcycle::MainWorkcycle() {
+
 }
 
 //-------------------------------------------------------------------------------------------------
 
-unsigned long microSeconds() {
-   return clock() / (CLOCKS_PER_SEC / 1000 ) ;
+MainWorkcycle::~MainWorkcycle() {
+
 }
 
 //-------------------------------------------------------------------------------------------------
 
-} // namespace Util
+void MainWorkcycle::run() {
+   while (true) {
+      oneWorkcycle();
+   }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+} // namespace Workcycle
 } // namespace Bt
-

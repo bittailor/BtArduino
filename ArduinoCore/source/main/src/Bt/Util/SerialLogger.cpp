@@ -4,30 +4,29 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-//  Bt::Util::Delay
+//  Bt::Util::SerialLogger
 //  
 //*************************************************************************************************
 
-#include <unistd.h>
-#include <time.h>
+#include "Bt/Util/SerialLogger.hpp"
 
 namespace Bt {
 namespace Util {
 
+
 //-------------------------------------------------------------------------------------------------
 
-void delayInMilliseconds(unsigned int milliseconds) {
-   sleep(milliseconds);
+SerialLogger::SerialLogger() {
+
 }
 
 //-------------------------------------------------------------------------------------------------
 
-unsigned long microSeconds() {
-   return clock() / (CLOCKS_PER_SEC / 1000 ) ;
+SerialLogger::~SerialLogger() {
+
 }
 
 //-------------------------------------------------------------------------------------------------
 
 } // namespace Util
 } // namespace Bt
-

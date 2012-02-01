@@ -4,22 +4,22 @@
 //
 //-------------------------------------------------------------------------------------------------
 //
-//  Bt::Util::Delay
+//  Bt::Util::Logging
 //  
 //*************************************************************************************************
 
-#ifndef INC__Bt_Util_Delay__hpp
-#define INC__Bt_Util_Delay__hpp
+#include "Bt/Util/Logging.hpp"
 
 namespace Bt {
 namespace Util {
 
-unsigned long microSeconds();
 
-void delayInMilliseconds(unsigned int milliseconds);
+void test() {
+   BT_UTIL_LOG_ERROR( "just a message "  << "hex=" << hex << 8 << " dec=" << dec << endl;  );
+}
+
+
+//-------------------------------------------------------------------------------------------------
 
 } // namespace Util
-
 } // namespace Bt
-
-#endif // INC__Bt_Util_Delay__hpp

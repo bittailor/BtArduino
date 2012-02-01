@@ -1,24 +1,11 @@
 package ch.bittailor.bt.ui;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.text.GapContent;
 
 import ch.bittailor.bt.com.TcpRequestClient;
 
@@ -161,7 +148,7 @@ public class ImageScreenTest {
 
 	public static void main(String[] args) {
 
-		for (int i = 0; i < 1 ; i++) {
+		for (int i = 0; i < 100 ; i++) {
 			System.out.println("Loop " + i);		
 			try {
 				final Socket socket = new Socket("192.168.2.2",2000);			
