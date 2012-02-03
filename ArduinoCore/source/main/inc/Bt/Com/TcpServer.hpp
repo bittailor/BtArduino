@@ -54,6 +54,7 @@ class TcpServer : public Workcycle::I_Runnable
       typedef void (TcpServer<ServerSocket,Socket>::*StateFunction)();
 
       ServerSocket* mServerSocket;
+      Socket mSocket;
       StateFunction mStateFunction;
       I_RequestServer* mHandler;
 
@@ -112,8 +113,8 @@ void TcpServer<ServerSocket,Socket>::checkStateFunction() {
 
 template<typename ServerSocket, typename Socket>
 void TcpServer<ServerSocket,Socket>::waitForClient() {
-   Socket socket = mServerSocket->available();
-   if (socket == true) {
+   mSocket = mServerSocket->available();
+   if (mSocket == true) {
       mStateFunction = &TcpServer<ServerSocket,Socket>::waitForRequest;
    }
 }
@@ -123,21 +124,20 @@ void TcpServer<ServerSocket,Socket>::waitForClient() {
 
 template<typename ServerSocket, typename Socket>
 void TcpServer<ServerSocket,Socket>::waitForRequest() {
-   Socket socket = mServerSocket->available();
-   if (socket != true) {
+   if (mSocket != true) {
       return;
    }
 
-   if (socket.available() <= 0) {
+   if (mSocket.available() <= 0) {
       // Serial.println("w 0");
-      checkConnection(socket);
+      checkConnection(mSocket);
       return;
    }
-   int checkByte = socket.read();
+   int checkByte = mSocket.read();
    // Serial.print("w c ");
    // Serial.println(checkByte,HEX);
    if (checkByte == -1) {
-      checkConnection(socket);
+      checkConnection(mSocket);
       return;
    }
    if (checkByte != TCP_SERVER_CHECK_BYTE) {
@@ -146,7 +146,7 @@ void TcpServer<ServerSocket,Socket>::waitForRequest() {
       Serial.print(" != ");
       Serial.print(TCP_SERVER_CHECK_BYTE,HEX);
       Serial.println(" => close connection");
-      socket.stop();
+      mSocket.stop();
       mStateFunction = &TcpServer<ServerSocket,Socket>::waitForClient;
       return;
    }
@@ -157,21 +157,20 @@ void TcpServer<ServerSocket,Socket>::waitForRequest() {
 
 template<typename ServerSocket, typename Socket>
 void TcpServer<ServerSocket,Socket>::readSize() {
-   Socket socket = mServerSocket->available();
-   if (socket != true) {
+   if (mSocket != true) {
       return;
    }
 
-   if (socket.available() <= 0) {
+   if (mSocket.available() <= 0) {
       // Serial.println("s 0");
-      checkConnection(socket);
+      checkConnection(mSocket);
       return;
    }
-   int size = socket.read();
+   int size = mSocket.read();
    // Serial.print("s s ");
    // Serial.println(size,HEX);
    if (size == -1) {
-      checkConnection(socket);
+      checkConnection(mSocket);
       return;
    }
    mSize = size;
@@ -184,20 +183,19 @@ void TcpServer<ServerSocket,Socket>::readSize() {
 
 template<typename ServerSocket, typename Socket>
 void TcpServer<ServerSocket,Socket>::readData() {
-   Socket socket = mServerSocket->available();
-   if (socket != true) {
+   if (mSocket != true) {
       return;
    }
 
-   if (socket.available() <= 0) {
+   if (mSocket.available() <= 0) {
       // Serial.println("r 0");
-      checkConnection(socket);
+      checkConnection(mSocket);
       return;
    }
 
-   int data = socket.read();
+   int data = mSocket.read();
    if (data == -1) {
-      checkConnection(socket);
+      checkConnection(mSocket);
       return;
    }
 
@@ -214,16 +212,16 @@ void TcpServer<ServerSocket,Socket>::readData() {
    if (mOutputBuffer.length() > 0) {
 
       // Serial.println("s c");
-      socket.write(TCP_SERVER_CHECK_BYTE);
+      mSocket.write(TCP_SERVER_CHECK_BYTE);
 
       // Serial.print("s l ");
       // Serial.println(mOutputBuffer.length());
-      socket.write(mOutputBuffer.length());
+      mSocket.write(mOutputBuffer.length());
 
       // Serial.println("s d");
-      socket.write(mOutputBuffer.raw(),mOutputBuffer.length());
+      mSocket.write(mOutputBuffer.raw(),mOutputBuffer.length());
 
-      if(socket.getWriteError()) {
+      if(mSocket.getWriteError()) {
          Serial.println("!!! WriteError !!!");
       }
    }
@@ -249,7 +247,7 @@ size_t TcpServer<ServerSocket,Socket>::calculateReadSize(size_t iAvailable) {
 template<typename ServerSocket, typename Socket>
 bool TcpServer<ServerSocket,Socket>::checkConnection(Socket iSocket) {
    if (!iSocket.connected()) {
-      Serial.println("connection lost => restart socket");
+      Serial.println("connection lost => restart mSocket");
       iSocket.flush();
       iSocket.stop();
       iSocket = Socket();
