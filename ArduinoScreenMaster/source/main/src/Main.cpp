@@ -82,6 +82,13 @@ int freeRam () {
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }
 
+Bt::Io::DigitalOutput mInterrupt(3);
+
+void interruptCheck()
+{
+   mInterrupt.toggle();
+}
+
 
 class HeartBeat : public Bt::Workcycle::I_Runnable {
    public:
@@ -90,10 +97,6 @@ class HeartBeat : public Bt::Workcycle::I_Runnable {
 
       virtual void workcycle() {
          mOutput.toggle();
-         Serial.print("m3 ");
-         Serial.print(freeRam());
-         Serial.print(" - ");
-         Serial.println(get_mem_unused());
       }
 
    private:
@@ -104,20 +107,10 @@ class HeartBeat : public Bt::Workcycle::I_Runnable {
 void configureDHCP() {
    byte mac[] = { 0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02 };
 
-   Serial.println("DHCP");
    while (Ethernet.begin(mac) == 0) {
-      Serial.println("DHCP = retry");
       delay(1000);
    }
 
-   Serial.print("IP : ");
-   IPAddress ip = Ethernet.localIP();
-   for (byte thisByte = 0; thisByte < 4; thisByte++) {
-      // print the value of each byte of the IP address:
-      Serial.print(ip[thisByte], DEC);
-      Serial.print(".");
-   }
-   Serial.println();
 }
 
 int main() {
@@ -125,13 +118,9 @@ int main() {
    init();
 
 
-
-   Serial.begin(9600);
-
-   Serial.print("m1 ");
-   Serial.print(freeRam());
-   Serial.print(" - ");
-   Serial.println(get_mem_unused());
+   pinMode(2, INPUT);           // set pin to input
+   digitalWrite(2, HIGH);       // turn on pullup resistors
+   attachInterrupt(0, interruptCheck, FALLING);
 
    delay(STARTUP_DELAY);
 
@@ -143,6 +132,7 @@ int main() {
    Bt::Ui::Color yellow    (255,255,  0);
    //Bt::Ui::Color white     (255,255,255);
 
+   /*
    Bt::Com::Twi twi;
    Bt::Com::TwoWireClient<Bt::Com::Twi> server1(twi,1);
    Bt::Com::TwoWireClient<Bt::Com::Twi> server2(twi,2);
@@ -158,19 +148,20 @@ int main() {
    screen.repaint();
 
    Bt::Ui::RgbScreenServer server(screen);
+   */
 
    configureDHCP();
 
-   screen.fill(yellow);
-   screen.repaint();
+   //screen.fill(yellow);
+   //screen.repaint();
 
    EthernetServer ethernetServer(2000);
    ethernetServer.begin();
 
-   Bt::Com::TcpServer<EthernetServer,EthernetClient> tcpServer(ethernetServer,server);
+   Bt::Com::TcpServer<EthernetServer,EthernetClient> tcpServer(ethernetServer);
 
-   screen.fill(green);
-   screen.repaint();
+   //screen.fill(green);
+   //screen.repaint();
 
    Bt::Workcycle::MainWorkcycle workcycle;
    workcycle.add(tcpServer);
@@ -182,11 +173,6 @@ int main() {
 
    HeartBeat heartBeat;
    periodic.add(heartBeat);
-
-   Serial.print("m2 ");
-   Serial.print(freeRam());
-   Serial.print(" - ");
-   Serial.println(get_mem_unused());
 
    workcycle.run();
 

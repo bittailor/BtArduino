@@ -16,6 +16,7 @@
 #include "BinaryInputPackage.hpp"
 #include "BinaryOutputPackage.hpp"
 #include "Bt/Workcycle/I_Runnable.hpp"
+#include "Bt/Io/ShiftRegister.hpp"
 
 namespace Bt {
 namespace Com {
@@ -30,7 +31,7 @@ class TcpServer : public Workcycle::I_Runnable
       enum { TCP_SERVER_CHECK_BYTE    = 0xAF};
 
 
-      TcpServer(ServerSocket& iServerSocket, I_RequestServer& iHandler);
+      TcpServer(ServerSocket& iServerSocket);
       ~TcpServer();
    
       virtual void workcycle();
@@ -47,24 +48,18 @@ class TcpServer : public Workcycle::I_Runnable
       void readSize();
       void readData();
 
-      size_t calculateReadSize(size_t iAvailable);
+      bool checkReadSocket();
       bool checkConnection(Socket iSocket);
       void checkStateFunction();
 
       typedef void (TcpServer<ServerSocket,Socket>::*StateFunction)();
 
+
       ServerSocket* mServerSocket;
       Socket mSocket;
       StateFunction mStateFunction;
-      I_RequestServer* mHandler;
-
       size_t mSize;
-
-      StaticArrayPackageBuffer<TCP_SERVER_BUFFER_LENGHT> mInputBuffer;
-      BinaryInputPackage mInput;
-      StaticArrayPackageBuffer<TCP_SERVER_BUFFER_LENGHT> mOutputBuffer;
-      BinaryOutputPackage mOutput;
-
+      Bt::Io::ShiftRegister mShift;
 
 };
 
@@ -72,9 +67,13 @@ class TcpServer : public Workcycle::I_Runnable
 //-------------------------------------------------------------------------------------------------
 
 template<typename ServerSocket, typename Socket>
-TcpServer<ServerSocket,Socket>::TcpServer(ServerSocket& iServerSocket, I_RequestServer& iHandler)
-: mServerSocket(&iServerSocket), mStateFunction(&TcpServer<ServerSocket,Socket>::waitForClient), mHandler(&iHandler), mSize(0) , mInput(mInputBuffer), mOutput(mOutputBuffer) {
-
+TcpServer<ServerSocket,Socket>::TcpServer(ServerSocket& iServerSocket)
+: mServerSocket(&iServerSocket), mStateFunction(&TcpServer<ServerSocket,Socket>::waitForClient), mSize(0), mShift(5,6,7) {
+   for (int i = 0; i < 256 ; ++i) {
+      mShift.write(i);
+      delay(10);
+   }
+   mShift.write(0);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -101,8 +100,6 @@ void TcpServer<ServerSocket,Socket>::checkStateFunction() {
    if (mStateFunction == &TcpServer<ServerSocket,Socket>::readSize       ) return;
    if (mStateFunction == &TcpServer<ServerSocket,Socket>::readData       ) return;
 
-   Serial.print("!!! wrong state function !!!");
-
    delay(1000);
 
    mStateFunction = &TcpServer<ServerSocket,Socket>::waitForRequest;
@@ -124,28 +121,16 @@ void TcpServer<ServerSocket,Socket>::waitForClient() {
 
 template<typename ServerSocket, typename Socket>
 void TcpServer<ServerSocket,Socket>::waitForRequest() {
-   if (mSocket != true) {
+   if (!checkReadSocket()) {
       return;
    }
 
-   if (mSocket.available() <= 0) {
-      // Serial.println("w 0");
-      checkConnection(mSocket);
-      return;
-   }
    int checkByte = mSocket.read();
-   // Serial.print("w c ");
-   // Serial.println(checkByte,HEX);
    if (checkByte == -1) {
       checkConnection(mSocket);
       return;
    }
    if (checkByte != TCP_SERVER_CHECK_BYTE) {
-      Serial.print("wrong check byte ");
-      Serial.print(checkByte,HEX);
-      Serial.print(" != ");
-      Serial.print(TCP_SERVER_CHECK_BYTE,HEX);
-      Serial.println(" => close connection");
       mSocket.stop();
       mStateFunction = &TcpServer<ServerSocket,Socket>::waitForClient;
       return;
@@ -157,24 +142,16 @@ void TcpServer<ServerSocket,Socket>::waitForRequest() {
 
 template<typename ServerSocket, typename Socket>
 void TcpServer<ServerSocket,Socket>::readSize() {
-   if (mSocket != true) {
+   if (!checkReadSocket()) {
       return;
    }
 
-   if (mSocket.available() <= 0) {
-      // Serial.println("s 0");
-      checkConnection(mSocket);
-      return;
-   }
    int size = mSocket.read();
-   // Serial.print("s s ");
-   // Serial.println(size,HEX);
    if (size == -1) {
       checkConnection(mSocket);
       return;
    }
    mSize = size;
-   mInputBuffer.clear();
    mStateFunction = &TcpServer<ServerSocket,Socket>::readData;
 }
 
@@ -183,13 +160,7 @@ void TcpServer<ServerSocket,Socket>::readSize() {
 
 template<typename ServerSocket, typename Socket>
 void TcpServer<ServerSocket,Socket>::readData() {
-   if (mSocket != true) {
-      return;
-   }
-
-   if (mSocket.available() <= 0) {
-      // Serial.println("r 0");
-      checkConnection(mSocket);
+   if (!checkReadSocket()) {
       return;
    }
 
@@ -199,33 +170,11 @@ void TcpServer<ServerSocket,Socket>::readData() {
       return;
    }
 
-   mInputBuffer.put(data);
-   if(mInputBuffer.length() < mSize) {
+   mShift.write(data);
+   mSize--;
+   if(mSize > 0) {
       return;
    }
-
-   mOutputBuffer.clear();
-
-   // Serial.println("h");
-   mHandler->handleRequest(mInput,mOutput);
-
-   if (mOutputBuffer.length() > 0) {
-
-      // Serial.println("s c");
-      mSocket.write(TCP_SERVER_CHECK_BYTE);
-
-      // Serial.print("s l ");
-      // Serial.println(mOutputBuffer.length());
-      mSocket.write(mOutputBuffer.length());
-
-      // Serial.println("s d");
-      mSocket.write(mOutputBuffer.raw(),mOutputBuffer.length());
-
-      if(mSocket.getWriteError()) {
-         Serial.println("!!! WriteError !!!");
-      }
-   }
-
 
    mStateFunction = &TcpServer<ServerSocket,Socket>::waitForRequest;
 
@@ -234,26 +183,33 @@ void TcpServer<ServerSocket,Socket>::readData() {
 //-------------------------------------------------------------------------------------------------
 
 template<typename ServerSocket, typename Socket>
-size_t TcpServer<ServerSocket,Socket>::calculateReadSize(size_t iAvailable) {
-   size_t remaining = mSize - mInputBuffer.length();
-   if (remaining < iAvailable) {
-      return remaining;
-   }
-   return iAvailable;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-template<typename ServerSocket, typename Socket>
 bool TcpServer<ServerSocket,Socket>::checkConnection(Socket iSocket) {
    if (!iSocket.connected()) {
-      Serial.println("connection lost => restart mSocket");
       iSocket.flush();
       iSocket.stop();
       iSocket = Socket();
       mStateFunction = &TcpServer<ServerSocket,Socket>::waitForClient;
       return false;
    }
+   return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+template<typename ServerSocket, typename Socket>
+bool TcpServer<ServerSocket,Socket>::checkReadSocket() {
+   if (!mSocket.connected()) {
+      mSocket.flush();
+      mSocket.stop();
+      mSocket = Socket();
+      mStateFunction = &TcpServer<ServerSocket,Socket>::waitForClient;
+      return false;
+   }
+   int available = mSocket.available();
+   if (available <= 0) {
+      return false;
+   }
+
    return true;
 }
 

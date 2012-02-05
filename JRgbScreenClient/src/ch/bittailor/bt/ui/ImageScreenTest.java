@@ -19,7 +19,7 @@ public class ImageScreenTest {
 		graphics.setColor(Color.BLUE);		
 		graphics.drawOval(0, 0, 6, 6);
 		
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 4; i++) {
 			
 		
 			graphics.setColor(Color.BLACK);		
@@ -137,7 +137,7 @@ public class ImageScreenTest {
 	
 	private static void sleep() {
 		try {
-			Thread.sleep(100);
+			Thread.sleep(50);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -148,14 +148,17 @@ public class ImageScreenTest {
 
 	public static void main(String[] args) {
 
-		for (int i = 0; i < 100 ; i++) {
+		for (int i = 0; i < 5 ; i++) {
 			System.out.println("Loop " + i);		
 			try {
 				final Socket socket = new Socket("192.168.2.2",2000);			
 				RgbScreenProxy screen = new RgbScreenProxy(new TcpRequestClient(socket));		
 				ImageScreen imageScreen = new ImageScreen(screen);
 				draw(imageScreen);
-				socket.close();			
+				socket.close();		
+				sleep();
+				sleep();
+				sleep();
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
