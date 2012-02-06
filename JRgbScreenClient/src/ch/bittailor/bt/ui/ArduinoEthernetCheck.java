@@ -9,6 +9,10 @@ import java.net.UnknownHostException;
 public class ArduinoEthernetCheck {
 
 	public static void main(String[] args) {
+		main_A();
+	}
+	
+	public static void main_B() {
 		for (int socketLoop = 0; socketLoop < 1000 ; socketLoop++) {
 			System.out.println("Socket Loop " + socketLoop);		
 			try {

@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.io.IOException;
-import java.net.Socket;
 import java.net.UnknownHostException;
 
+import ch.bittailor.bt.com.ConnectionFactory;
 import ch.bittailor.bt.com.TcpRequestClient;
 
 public class ImageScreenTest {
@@ -19,7 +19,7 @@ public class ImageScreenTest {
 		graphics.setColor(Color.BLUE);		
 		graphics.drawOval(0, 0, 6, 6);
 		
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 20; i++) {
 			
 		
 			graphics.setColor(Color.BLACK);		
@@ -148,17 +148,16 @@ public class ImageScreenTest {
 
 	public static void main(String[] args) {
 
-		for (int i = 0; i < 1 ; i++) {
+		for (int i = 0; i < 10 ; i++) {
 			System.out.println("Loop " + i);		
 			try {
-				final Socket socket = new Socket("192.168.2.2",2000);			
-				RgbScreenProxy screen = new RgbScreenProxy(new TcpRequestClient(socket));		
+				final ConnectionFactory connectionFactory = new ConnectionFactory("192.168.2.2",2000);							
+				RgbScreenProxy screen = new RgbScreenProxy(new TcpRequestClient(connectionFactory));		
 				ImageScreen imageScreen = new ImageScreen(screen);
 				draw(imageScreen);
-				socket.close();		
-				sleep();
-				sleep();
-				sleep();
+				System.out.print("Sleep ...");
+				Thread.sleep(1000);
+				System.out.println("... done");
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -166,6 +165,9 @@ public class ImageScreenTest {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (FontFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

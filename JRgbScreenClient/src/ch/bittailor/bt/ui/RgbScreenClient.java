@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import ch.bittailor.bt.com.ConnectionFactory;
 import ch.bittailor.bt.com.TcpRequestClient;
 
 public class RgbScreenClient {
@@ -52,15 +53,11 @@ public class RgbScreenClient {
 		for (int i = 0; i < 1000 ; i++) {
 			System.out.println("Loop " + i);		
 			try {
-				final Socket socket = new Socket("192.168.2.2",2000);			
-				RgbScreenProxy screen = new RgbScreenProxy(new TcpRequestClient(socket));		
-				draw(screen);
-				socket.close();			
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				final ConnectionFactory connectionFactory = new ConnectionFactory("192.168.2.2",2000);	
+				RgbScreenProxy screen = new RgbScreenProxy(new TcpRequestClient(connectionFactory));		
+				draw(screen);	
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}

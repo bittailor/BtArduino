@@ -2,19 +2,21 @@ package ch.bittailor.bt.com;
 
 public interface IRequestClient {
 
-	IOutputPackage out();
-    IInputPackage in();
+	public IOutputPackage out();
+	public IInputPackage in();
 
     /**
      * Sends an action request. 
      * An action request is a request without return value. 
      */
-    void sendActionRequest();
+	public void sendActionRequest();
     
     /**
      * Sends a function request. 
      * An query request is a request with return value. 
      */
-    void sendQueryRequest();
+	public void sendQueryRequest();
+    
+	public void close();
 	
 }

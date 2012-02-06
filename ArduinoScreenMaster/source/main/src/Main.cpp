@@ -132,7 +132,7 @@ int main() {
    Bt::Ui::Color yellow    (255,255,  0);
    //Bt::Ui::Color white     (255,255,255);
 
-   /*
+
    Bt::Com::Twi twi;
    Bt::Com::TwoWireClient<Bt::Com::Twi> server1(twi,1);
    Bt::Com::TwoWireClient<Bt::Com::Twi> server2(twi,2);
@@ -148,20 +148,24 @@ int main() {
    screen.repaint();
 
    Bt::Ui::RgbScreenServer server(screen);
-   */
+
 
    configureDHCP();
 
-   //screen.fill(yellow);
-   //screen.repaint();
+   screen.fill(yellow);
+   screen.repaint();
 
    EthernetServer ethernetServer(2000);
    ethernetServer.begin();
 
-   Bt::Com::TcpServer<EthernetServer,EthernetClient> tcpServer(ethernetServer);
+   EthernetServer dummy1(3001);
+   EthernetServer dummy2(3002);
+   EthernetServer dummy3(3003);
 
-   //screen.fill(green);
-   //screen.repaint();
+   Bt::Com::TcpServer<EthernetServer,EthernetClient> tcpServer(ethernetServer,server);
+
+   screen.fill(green);
+   screen.repaint();
 
    Bt::Workcycle::MainWorkcycle workcycle;
    workcycle.add(tcpServer);
