@@ -148,7 +148,7 @@ public class ImageScreenTest {
 
 	public static void main(String[] args) {
 
-		for (int i = 0; i < 5 ; i++) {
+		for (int i = 0; i < 1 ; i++) {
 			System.out.println("Loop " + i);		
 			try {
 				final Socket socket = new Socket("192.168.2.2",2000);			
