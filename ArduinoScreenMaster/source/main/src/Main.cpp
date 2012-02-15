@@ -30,7 +30,7 @@
 #define STARTUP_DELAY 3000UL
 
 #define HEARTBEAT_LED_PIN 9
-#define HEARTBEAT_PERIOD 500UL
+#define HEARTBEAT_PERIOD 500000UL
 
 static const Bt::Ui::Color RED       (255,  0,  0);
 static const Bt::Ui::Color YELLOW    (255,255,  0);
@@ -73,7 +73,6 @@ int main() {
    EthernetServer ethernetServer(2000);
    ethernetServer.begin();
    Bt::Com::TcpServer<EthernetServer,EthernetClient> tcpServer(ethernetServer,server);
-   screen.repaint();
 
    // Workcycle
    Bt::Workcycle::MainWorkcycle workcycle;
@@ -88,6 +87,7 @@ int main() {
 
    // Workcycle (for ever)
    screen.fill(GREEN);
+   screen.repaint();
    workcycle.run();
 
    return 0;

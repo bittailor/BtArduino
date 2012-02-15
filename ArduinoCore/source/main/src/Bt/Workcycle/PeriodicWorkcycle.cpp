@@ -10,8 +10,6 @@
 
 #include "Bt/Workcycle/PeriodicWorkcycle.hpp"
 
-#include <Arduino.h>
-
 namespace Bt {
 namespace Workcycle {
 

@@ -23,15 +23,19 @@ public class RgbScreenClient {
 				Color.BLUE,
 				Color.RED,
 				Color.YELLOW,
+				Color.MAGENTA,
+				Color.ORANGE,
+				Color.WHITE,
+				Color.PINK,
 				Color.CYAN};
 		
 		
 		
-		for (int i = 0; i < 20 ; i++) {			
+		for (int i = 0; i < 200 ; i++) {			
 			System.out.println(i);
 			
 			for (Color color : colors) {
-				System.out.println(color);				
+//				System.out.println(color);				
 				for (int y = 0; y < height; y++) {
 					for (int x = 0; x < width; x++) {
 						//long start = System.nanoTime();
@@ -49,7 +53,7 @@ public class RgbScreenClient {
 
 	public static void main(String[] args) {
 		
-		for (int i = 0; i < 1 ; i++) {
+		for (int i = 0; i < 100 ; i++) {
 			System.out.println("Loop " + i);		
 			try {
 				final ConnectionFactory connectionFactory = new ConnectionFactory("192.168.2.2",2000);	
