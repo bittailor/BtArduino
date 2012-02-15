@@ -44,7 +44,7 @@ public class TcpRequestClient implements IRequestClient {
 		try {
 			send();
 			clearBuffers();
-			
+			receive();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -66,7 +66,10 @@ public class TcpRequestClient implements IRequestClient {
 		try {
 			mConnection.getOutputStream().write(TCP_SERVER_QUIT);
 			mConnection.getOutputStream().flush();
+			Thread.sleep(100);
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		mConnection.close();

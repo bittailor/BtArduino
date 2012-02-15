@@ -23,8 +23,8 @@ public class RgbScreenProxy implements IRgbScreen {
 
 	public RgbScreenProxy(IRequestClient iRequestClient) {
 		this.mClient = iRequestClient;
-		mWidth = 0;
-		mHeight = 0;
+		mWidth = 16;
+		mHeight = 8;
 	}
 
 	/* (non-Javadoc)

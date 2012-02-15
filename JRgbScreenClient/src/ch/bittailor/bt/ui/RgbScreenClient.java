@@ -28,13 +28,12 @@ public class RgbScreenClient {
 		
 		
 		for (int i = 0; i < 20 ; i++) {			
-			//System.out.println(i);
+			System.out.println(i);
 			
 			for (Color color : colors) {
-				
+				System.out.println(color);				
 				for (int y = 0; y < height; y++) {
 					for (int x = 0; x < width; x++) {
-						//System.out.println("- " + x + "," + y + " " + color);
 						//long start = System.nanoTime();
 						screen.setPixel(x, y, color);
 						screen.repaint();
@@ -50,12 +49,14 @@ public class RgbScreenClient {
 
 	public static void main(String[] args) {
 		
-		for (int i = 0; i < 1000 ; i++) {
+		for (int i = 0; i < 1 ; i++) {
 			System.out.println("Loop " + i);		
 			try {
 				final ConnectionFactory connectionFactory = new ConnectionFactory("192.168.2.2",2000);	
-				RgbScreenProxy screen = new RgbScreenProxy(new TcpRequestClient(connectionFactory));		
+				TcpRequestClient requestClient = new TcpRequestClient(connectionFactory);
+				RgbScreenProxy screen = new RgbScreenProxy(requestClient);		
 				draw(screen);	
+				requestClient.close();
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();

@@ -11,12 +11,11 @@
 #ifndef INC__Bt_Com_TcpServer__hpp
 #define INC__Bt_Com_TcpServer__hpp
 
+#include "Bt/Workcycle/I_Runnable.hpp"
 #include "I_RequestServer.hpp"
 #include "StaticArrayPackageBuffer.hpp"
 #include "BinaryInputPackage.hpp"
 #include "BinaryOutputPackage.hpp"
-#include "Bt/Workcycle/I_Runnable.hpp"
-#include "Bt/Io/ShiftRegister.hpp"
 
 namespace Bt {
 namespace Com {
@@ -51,7 +50,7 @@ class TcpServer : public Workcycle::I_Runnable
       void sendData();
 
       bool checkReadSocket();
-      bool checkConnection();
+      bool checkData(int iData);
 
       typedef void (TcpServer<ServerSocket,Socket>::*StateFunction)();
 
@@ -112,8 +111,7 @@ void TcpServer<ServerSocket,Socket>::waitForRequest() {
 
    int commandByte = mSocket.read();
 
-   if (commandByte == -1) {
-      checkConnection();
+   if (!checkData(commandByte)) {
       return;
    }
 
@@ -140,8 +138,7 @@ void TcpServer<ServerSocket,Socket>::readSize() {
    }
 
    int size = mSocket.read();
-   if (size == -1) {
-      checkConnection();
+   if (!checkData(size)) {
       return;
    }
 
@@ -160,8 +157,7 @@ void TcpServer<ServerSocket,Socket>::readData() {
    }
 
    int data = mSocket.read();
-   if (data == -1) {
-      checkConnection();
+   if (!checkData(data)) {
       return;
    }
 
@@ -174,15 +170,9 @@ void TcpServer<ServerSocket,Socket>::readData() {
    mOutputBuffer.clear();
 
    mHandler->handleRequest(mInput,mOutput);
-
-   if (mOutputBuffer.length() > 0) {
-      mStateFunction = &TcpServer<ServerSocket,Socket>::sendData;
-      return;
-   }
-
-   mStateFunction = &TcpServer<ServerSocket,Socket>::waitForRequest;
-
+   mStateFunction = &TcpServer<ServerSocket,Socket>::sendData;
 }
+
 //-------------------------------------------------------------------------------------------------
 
 template<typename ServerSocket, typename Socket>
@@ -190,8 +180,9 @@ void TcpServer<ServerSocket,Socket>::sendData() {
 
    mSocket.write(TCP_SERVER_START_REQUEST);
    mSocket.write(mOutputBuffer.length());
-   mSocket.write(mOutputBuffer.raw(),mOutputBuffer.length());
-
+   if (mOutputBuffer.length() > 0) {
+      mSocket.write(mOutputBuffer.raw(),mOutputBuffer.length());
+   }
    mStateFunction = &TcpServer<ServerSocket,Socket>::waitForRequest;
 
 }
@@ -199,12 +190,14 @@ void TcpServer<ServerSocket,Socket>::sendData() {
 //-------------------------------------------------------------------------------------------------
 
 template<typename ServerSocket, typename Socket>
-bool TcpServer<ServerSocket,Socket>::checkConnection() {
-   if (!mSocket.connected()) {
-      mSocket.flush();
-      mSocket.stop();
-      mSocket = Socket();
-      mStateFunction = &TcpServer<ServerSocket,Socket>::waitForClient;
+bool TcpServer<ServerSocket,Socket>::checkData(int iData) {
+   if (iData < 0) {
+      if (!mSocket.connected()) {
+         mSocket.flush();
+         mSocket.stop();
+         mStateFunction = &TcpServer::waitForClient;
+         return false;
+      }
       return false;
    }
    return true;
@@ -217,7 +210,6 @@ bool TcpServer<ServerSocket,Socket>::checkReadSocket() {
    if (!mSocket.connected()) {
       mSocket.flush();
       mSocket.stop();
-      mSocket = Socket();
       mStateFunction = &TcpServer<ServerSocket,Socket>::waitForClient;
       return false;
    }
