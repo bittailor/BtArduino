@@ -1,0 +1,13 @@
+require 'fileutils'
+
+task :cleanup do
+	Dir.glob("*/target").each do | target |
+		FileUtils.rm_rf(target, {:verbose => true})
+	end	
+end
+
+task :build do 
+	system("bjam -j8 ArduinoUno HostUnitTest")
+end
+
+task :rebuild => [ :cleanup , :build ] 

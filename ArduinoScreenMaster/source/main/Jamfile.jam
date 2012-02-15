@@ -6,4 +6,5 @@ project ArduinoScreenMaster/main
 	;
 
 
-exe ArduinoScreenMaster : [ glob-tree *.cpp ] /ArduinoCore/main//ArduinoCore ;
+exe ArduinoScreenMaster   : [ glob-tree *.cpp ] /ArduinoCore/main//ArduinoCore : <toolset>avr ;
+alias ArduinoScreenMaster ;

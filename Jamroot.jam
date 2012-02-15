@@ -34,13 +34,21 @@ for file in [ glob * ]
 {
 	if [ glob $(file)/Jamfile.jam ]
 	{
-		projects += $(file) ;	
+		if ProjectTemplate != $(file) 
+		{
+			projects += $(file) ;	
+		}
 	}
 }
 
-# echo projects is $(projects) ;
+echo projects is $(projects) ;
 
 for project in $(projects)
 {
-	use-project /$(project) : $(project) ;  
+	use-project /$(project) : $(project) ;
+}
+
+for project in $(projects)
+{
+	build-project $(project) ;
 }

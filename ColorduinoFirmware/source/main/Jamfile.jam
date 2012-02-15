@@ -4,5 +4,6 @@ project ColorduinoFirmware/main
 	:  
 	;
 
-exe ColorduinoFirmware : [ glob-tree *.cpp ] /ArduinoCore/main//ArduinoCore ;
+exe   ColorduinoFirmware : [ glob-tree *.cpp ] /ArduinoCore/main//ArduinoCore : <toolset>avr ;
+alias ColorduinoFirmware ;
                             
