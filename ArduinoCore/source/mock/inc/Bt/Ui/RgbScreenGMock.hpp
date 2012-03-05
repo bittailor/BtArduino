@@ -26,6 +26,10 @@ class RgbScreenGMock : public I_RgbScreen {
       MOCK_METHOD3(setPixel,void (uint8_t iX, uint8_t iY, Color iColor));
       MOCK_METHOD1(fill,void (Color iColor));
       MOCK_METHOD0(repaint,void ());
+      MOCK_METHOD0(numberOfSegments,uint8_t ());
+      MOCK_METHOD1(whiteBalance,Color (uint8_t iSegment));
+      MOCK_METHOD2(setWhiteBalance,void (Color iColor, uint8_t iSegment));
+      MOCK_METHOD1(persistWhiteBalance,void (uint8_t iSegment));
 
 };
 

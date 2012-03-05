@@ -38,6 +38,7 @@ class RgbScreenServer : public Com::I_RequestServer
       void setPixel(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut);
       void fill(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut);
       void repaint(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut);
+      void setWhiteBalance(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut);
 
       I_RgbScreen* mScreen;
 };

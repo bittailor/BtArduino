@@ -11,7 +11,8 @@ variant HostUnitTest :
 	<optimization>off 
 	<debug-symbols>on 
 	<runtime-debugging>on 
-    <link>static ; 
+    <link>static
+    <cxxflags>-Werror=return-type ; 
 
 variant ArduinoUno : 
     <toolset>avr
@@ -22,7 +23,8 @@ variant ArduinoUno :
 	<inlining>full
     <runtime-debugging>off 
     <define>NDEBUG 
-    <link>static ; 
+    <link>static
+    <cxxflags>-Werror=return-type ; 
 
 lib gtest : : <name>gtest ;
 lib gmock : : <name>gmock ;

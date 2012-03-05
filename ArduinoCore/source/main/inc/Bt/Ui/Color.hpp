@@ -41,7 +41,7 @@ class Color
          iOut << mRed << mGreen << mBlue;
       }
 
-      bool operator==(const Color iColor) {
+      bool operator==(const Color iColor) const {
          return mRed == iColor.mRed && mGreen == iColor.mGreen && mBlue == iColor.mBlue;
       }
 

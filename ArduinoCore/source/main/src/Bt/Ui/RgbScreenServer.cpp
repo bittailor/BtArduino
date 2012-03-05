@@ -10,6 +10,7 @@
 
 #include "Bt/Ui/RgbScreenServer.hpp"
 
+#include "Bt/Ui/RemoteRgbScreenProtocol.hpp"
 #include "Bt/Ui/RgbScreenProxy.hpp"
 
 namespace Bt {
@@ -33,20 +34,32 @@ void RgbScreenServer::handleRequest(Com::I_InputPackage& iIn, Com::I_OutputPacka
    uint8_t command = 255;
    iIn >> command;
    switch (command) {
-      case RgbScreenProxy::WIDTH : {
+      case RemoteRgbScreenProtocol::WIDTH : {
          oOut << static_cast<uint8_t>(mScreen->width());
       } break;
-      case RgbScreenProxy::HEIGHT : {
+      case RemoteRgbScreenProtocol::HEIGHT : {
          oOut << static_cast<uint8_t>(mScreen->height());
       } break;
-      case RgbScreenProxy::SET_PIXEL : {
+      case RemoteRgbScreenProtocol::SET_PIXEL : {
          setPixel(iIn,oOut);
       } break;
-      case RgbScreenProxy::FILL : {
+      case RemoteRgbScreenProtocol::FILL : {
          fill(iIn,oOut);
       } break;
-      case RgbScreenProxy::REPAINT : {
+      case RemoteRgbScreenProtocol::REPAINT : {
          repaint(iIn,oOut);
+      } break;
+      case RemoteRgbScreenProtocol::NUMBER_OF_SEGMENTS : {
+         oOut << static_cast<uint8_t>(mScreen->numberOfSegments());
+      } break;
+      case RemoteRgbScreenProtocol::WHITE_BALANCE : {
+         oOut << mScreen->whiteBalance(iIn.readInt8());
+      } break;
+      case RemoteRgbScreenProtocol::SET_WHITE_BALANCE : {
+         setWhiteBalance(iIn,oOut);
+      } break;
+      case RemoteRgbScreenProtocol::PERSIST_WHITE_BALANCE : {
+         mScreen->persistWhiteBalance(iIn.readInt8());
       } break;
       default : {
       } break;
@@ -74,6 +87,15 @@ void RgbScreenServer::fill(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut)
 
 void RgbScreenServer::repaint(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut) {
    mScreen->repaint();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void RgbScreenServer::setWhiteBalance(Com::I_InputPackage& iIn, Com::I_OutputPackage& oOut) {
+   Color color(iIn);
+   uint8_t segment;
+   iIn >> segment;
+   mScreen->setWhiteBalance(color,segment);
 }
 
 //-------------------------------------------------------------------------------------------------

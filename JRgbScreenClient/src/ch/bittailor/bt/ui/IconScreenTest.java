@@ -2,68 +2,84 @@ package ch.bittailor.bt.ui;
 
 import java.awt.Color;
 import java.awt.FontFormatException;
-import java.awt.image.BufferedImage;
-import java.io.File;
+import java.awt.Graphics2D;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URISyntaxException;
 import java.net.UnknownHostException;
-
-import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 import ch.bittailor.bt.com.ConnectionFactory;
 import ch.bittailor.bt.com.TcpRequestClient;
 
-public class ImageScreenTest {
+public class IconScreenTest {
 
 
 	private static void draw(final ImageScreen iImageScreen) throws FontFormatException, IOException {
-		try {
-			File iconFolder = new File(ImageScreenTest.class.getResource("icons").toURI());
-			for ( String file : iconFolder.list()) {
-				if (!file.endsWith(".png")) {
-					continue;
-				}
-				System.out.println("draw " + file);
-				iImageScreen.getScreen().fill(Color.black);
-				iImageScreen.repaint();
-				final BufferedImage icon = ImageIO.read(new File(iconFolder,file));
-				iImageScreen.getGraphics().drawImage(icon, 0, 0, null);
-				iImageScreen.repaint();
-				
-				SwingUtilities.invokeAndWait(new Runnable() {
-					
-					@Override
-					public void run() {
-						JFrame frame = new JFrame("Image");
-						
-						frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-						frame.getContentPane().add(new JLabel(new ImageIcon(iImageScreen.getImage()),SwingConstants.CENTER));
-						frame.getContentPane().add(new JLabel(new ImageIcon(icon),SwingConstants.CENTER));
-						frame.pack();
-						frame.setVisible(true);
-						frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-					}
-				});
-				
-				
-			}
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Graphics2D graphics = iImageScreen.getGraphics();
+
 		
+		graphics.setColor(Color.BLUE);		
+		graphics.drawOval(0, 0, 6, 6);
+		
+		for (int i = 0; i < 300; i++) {
+			System.out.println("i " + i);
+		
+			graphics.setColor(Color.BLACK);		
+			graphics.drawLine(3, 3, 2, 2);
+			graphics.setColor(Color.BLUE);
+			graphics.drawLine(3, 3, 3, 1);
+			iImageScreen.repaint();
+			sleep();
+			
+			graphics.setColor(Color.BLACK);		
+			graphics.drawLine(3, 3, 3, 1);
+			graphics.setColor(Color.BLUE);	
+			graphics.drawLine(3, 3, 4, 2);
+			iImageScreen.repaint();
+			sleep();
+			
+			graphics.setColor(Color.BLACK);		
+			graphics.drawLine(3, 3, 4, 2);
+			graphics.setColor(Color.BLUE);	
+			graphics.drawLine(3, 3, 5, 3);
+			iImageScreen.repaint();
+			sleep();
+			
+			
+			graphics.setColor(Color.BLACK);		
+			graphics.drawLine(3, 3, 5, 3);
+			graphics.setColor(Color.BLUE);	
+			graphics.drawLine(3, 3, 4, 4);
+			iImageScreen.repaint();
+			sleep();
+			
+			graphics.setColor(Color.BLACK);		
+			graphics.drawLine(3, 3, 4, 4);
+			graphics.setColor(Color.BLUE);	
+			graphics.drawLine(3, 3, 3, 5);
+			iImageScreen.repaint();
+			sleep();
+			
+			graphics.setColor(Color.BLACK);		
+			graphics.drawLine(3, 3, 3, 5);
+			graphics.setColor(Color.BLUE);	
+			graphics.drawLine(3, 3, 2, 4);
+			iImageScreen.repaint();
+			sleep();
+			
+			graphics.setColor(Color.BLACK);		
+			graphics.drawLine(3, 3, 2, 4);
+			graphics.setColor(Color.BLUE);	
+			graphics.drawLine(3, 3, 1, 3);
+			iImageScreen.repaint();
+			sleep();
+			
+			graphics.setColor(Color.BLACK);		
+			graphics.drawLine(3, 3, 1, 3);
+			graphics.setColor(Color.BLUE);	
+			graphics.drawLine(3, 3, 2, 2);
+			iImageScreen.repaint();
+			sleep();
+			
+		}
 		
 		
 		/*
@@ -118,18 +134,17 @@ public class ImageScreenTest {
 				
 	}
 	
-	/*
 	
 	private static void sleep() {
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(50);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 	}
-	*/
+
 
 	public static void main(String[] args) {
 
@@ -159,5 +174,8 @@ public class ImageScreenTest {
 				e.printStackTrace();
 			}
 		}
+
 	}
+
+	
 }

@@ -33,7 +33,7 @@ public class ArduinoEthernetCheck {
 					if (commandByte == SERVER_DATA) {
 						int readDataLength = inputStream.read();
 						for (int i = 0; i < readDataLength; i++) {
-							int data = inputStream.read();
+							// int data = inputStream.read();
 							// System.out.println("read> " + data);
 						}
 					} else {

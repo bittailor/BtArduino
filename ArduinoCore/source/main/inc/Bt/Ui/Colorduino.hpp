@@ -26,13 +26,12 @@ class Colorduino : public I_RgbScreen
       enum {
          WIDTH = 8,
          HEIGHT = 8,
-         BITS_PER_BYTE = 8
+         BITS_PER_BYTE = 8,
+         MAX_WHITE_BALANCE = 63
       };
 
-      explicit Colorduino(Color iWhiteBalance = Color(34,60,63));
+      explicit Colorduino(int iWhiteBalanceAddress);  //Color iWhiteBalance = Color(34,60,63));
       ~Colorduino();
-
-      void setWhiteBalance(Color iColor);
 
       virtual size_t width();
       virtual size_t height();
@@ -40,6 +39,11 @@ class Colorduino : public I_RgbScreen
       virtual void setPixel(uint8_t iX, uint8_t iY, Color iColor) ;
       virtual void fill(Color iColor) ;
       virtual void repaint();
+
+      virtual uint8_t numberOfSegments();
+      virtual Color whiteBalance(uint8_t iSegment);
+      virtual void setWhiteBalance(Color iColor, uint8_t iSegment);
+      virtual void persistWhiteBalance(uint8_t iSegment);
    
    private:
       friend void timer2Callback();
@@ -53,6 +57,7 @@ class Colorduino : public I_RgbScreen
       void initIo();
       void initLed();
       void initTimerIsr();
+      void initWhiteBalance();
 
       void workcycle();
 
@@ -69,6 +74,8 @@ class Colorduino : public I_RgbScreen
       uint8_t mWrite;
       uint8_t mRead;
       uint8_t mCurrentLine;
+      uint8_t* mWhiteBalanceAddress;
+      Color mWhiteBalance;
 
 };
 

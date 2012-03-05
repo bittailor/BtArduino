@@ -106,5 +106,79 @@ void CompoundRgbScreen::repaint() {
 
 //-------------------------------------------------------------------------------------------------
 
+uint8_t CompoundRgbScreen::numberOfSegments() {
+   uint8_t segments = 0;
+   for (int row = 0; row < mScreens.rows(); ++row) {
+      for (int column = 0; column < mScreens.columns(); ++column) {
+         segments += mScreens(row,column)->numberOfSegments();
+      }
+   }
+   return segments;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+Color CompoundRgbScreen::whiteBalance(uint8_t iSegment) {
+   if (iSegment >= numberOfSegments()) {
+      return Color();
+   }
+
+   uint8_t index;
+   uint8_t subsegment;
+   getSegmentIndex(iSegment,index,subsegment);
+
+   return mScreens[index]->whiteBalance(subsegment);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CompoundRgbScreen::setWhiteBalance(Color iColor, uint8_t iSegment) {
+
+   if (iSegment >= numberOfSegments()) {
+      return;
+   }
+
+   uint8_t index;
+   uint8_t subsegment;
+   getSegmentIndex(iSegment,index,subsegment);
+
+   mScreens[index]->setWhiteBalance(iColor,subsegment);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CompoundRgbScreen::persistWhiteBalance(uint8_t iSegment) {
+   if (iSegment >= numberOfSegments()) {
+      return;
+   }
+
+   uint8_t index;
+   uint8_t subsegment;
+   getSegmentIndex(iSegment,index,subsegment);
+
+   mScreens[index]->persistWhiteBalance(subsegment);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CompoundRgbScreen::getSegmentIndex(uint8_t iSegment, uint8_t& oIndex, uint8_t& oSubsegment) {
+   uint8_t size  = mScreens.rows()*mScreens.columns();
+   uint8_t current = 0;
+   for (int i = 0; i < (size - 1)  ; ++i) {
+      uint8_t next = current + mScreens[i]->numberOfSegments();
+      if ( next > iSegment) {
+         oIndex = i;
+         oSubsegment = iSegment - current;
+         return;
+      }
+      current = next;
+   }
+
+   oIndex = size - 1;
+   oSubsegment = iSegment - current;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 } // namespace Ui
 } // namespace Bt

@@ -10,6 +10,7 @@
 
 #include "Bt/Ui/Colorduino.hpp"
 
+#include <avr/eeprom.h>
 #include <avr/interrupt.h>
 #include <util/atomic.h>
 
@@ -76,16 +77,17 @@ namespace Ui {
 
 //-------------------------------------------------------------------------------------------------
 
-Colorduino::Colorduino(Color iWhiteBalance)
+Colorduino::Colorduino(int iWhiteBalanceAddress)
 : mSingletonInstance(*this)
 , mScreens()
 , mWrite(0)
 , mRead(1)
-, mCurrentLine(0) {
+, mCurrentLine(0)
+, mWhiteBalanceAddress(reinterpret_cast<uint8_t*>(iWhiteBalanceAddress)) {
    initIo();
    initLed();
    initTimerIsr();
-   setWhiteBalance(iWhiteBalance);
+   initWhiteBalance();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -132,15 +134,50 @@ void Colorduino::initTimerIsr() {
 
 //-------------------------------------------------------------------------------------------------
 
+void Colorduino::initWhiteBalance() {
+   enum {N_COLORS = 3};
 
-void Colorduino::setWhiteBalance(Color iColor) {
+   uint8_t colors[N_COLORS] = {};
+
+   for (int i = 0; i < N_COLORS; ++i) {
+      colors[i] = eeprom_read_byte(mWhiteBalanceAddress+i);
+      if (colors[i] > MAX_WHITE_BALANCE) {
+         colors[i] = MAX_WHITE_BALANCE;
+      }
+   }
+   setWhiteBalance(Color(colors[0],colors[1],colors[2]),0);
+
+}
+
+//-------------------------------------------------------------------------------------------------
+
+uint8_t Colorduino::numberOfSegments() {
+   return 1;
+}
+//-------------------------------------------------------------------------------------------------
+
+Color Colorduino::whiteBalance(uint8_t iSegment) {
+   return mWhiteBalance;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void Colorduino::setWhiteBalance(Color iColor, uint8_t iSegment) {
+   mWhiteBalance = iColor;
    LED_LAT_CLR;
    LED_SELBNK_CLR;
    for (unsigned int x = 0; x < WIDTH; ++x) {
       shiftOut(iColor,6);
    }
    LED_SELBNK_SET;
+}
 
+//-------------------------------------------------------------------------------------------------
+
+void Colorduino::persistWhiteBalance(uint8_t iSegment) {
+   eeprom_write_byte(mWhiteBalanceAddress,mWhiteBalance.red());
+   eeprom_write_byte(mWhiteBalanceAddress+1,mWhiteBalance.green());
+   eeprom_write_byte(mWhiteBalanceAddress+2,mWhiteBalance.blue());
 }
 
 //-------------------------------------------------------------------------------------------------

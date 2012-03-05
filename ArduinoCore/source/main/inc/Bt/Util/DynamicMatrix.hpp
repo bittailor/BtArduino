@@ -89,6 +89,10 @@ class DynamicMatrix : public I_Matrix<T>
          return mData[iRow * mColumns + iColumn];
       }
 
+      T& operator[](uint8_t iIndex) {
+         return mData[iIndex];
+      }
+
    private:
 
       void copy(const Util::I_Matrix<T>& iMatrix) {

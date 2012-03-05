@@ -2,7 +2,10 @@ import testing ;
 
 project ArduinoCore/test 
 	: source-location src	 
-	: requirements <include>inc <include>src
+	: requirements 
+	       <include>inc 
+	       <include>src 
+	       <include>../main/src #allow the tests to see the internal headers of the library
 	: 
 	;
 

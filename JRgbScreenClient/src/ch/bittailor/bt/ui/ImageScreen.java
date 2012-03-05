@@ -29,6 +29,10 @@ public class ImageScreen {
 		mScreen.repaint();	
 	}
 	
+	public IRgbScreen getScreen() {
+		return mScreen;
+	}
+	
 	public Image getImage() {
 		return mImage;
 	}

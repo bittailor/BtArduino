@@ -9,22 +9,27 @@ public class RgbScreenProxy implements IRgbScreen {
 
 	enum Cmd {
 		WIDTH,
-		HEIGHT,
-		SET_PIXEL,
-		FILL,
-		REPAINT
+        HEIGHT,
+        SET_PIXEL,
+        FILL,
+        REPAINT,
+        NUMBER_OF_SEGMENTS,
+        WHITE_BALANCE,
+        SET_WHITE_BALANCE,
+        PERSIST_WHITE_BALANCE
 	};
 
 	private IRequestClient mClient;
 	private int mWidth;
 	private int mHeight;
+	private int mNumberOfSegments;
 
 
 
 	public RgbScreenProxy(IRequestClient iRequestClient) {
 		this.mClient = iRequestClient;
-		mWidth = 16;
-		mHeight = 8;
+		mWidth = 0;
+		mHeight = 0;
 	}
 
 	/* (non-Javadoc)
@@ -88,5 +93,37 @@ public class RgbScreenProxy implements IRgbScreen {
 		ioOut.writeUInt8(iColor.getBlue());
 	}
 
+	@Override
+	public int numberOfSegments() {
+		if (mNumberOfSegments == 0) {
+			mClient.out().writeUInt8(Cmd.NUMBER_OF_SEGMENTS.ordinal()); 
+			mClient.sendQueryRequest();
+			mNumberOfSegments = mClient.in().readUInt8();
+		}
+		return mNumberOfSegments;
+	}
+
+	@Override
+	public Color whiteBalance(int iSegment) {
+		mClient.out().writeUInt8(Cmd.WHITE_BALANCE.ordinal());
+		mClient.out().writeInt8(iSegment); 
+		mClient.sendQueryRequest();
+		return new Color(mClient.in().readUInt8(),mClient.in().readUInt8(),mClient.in().readUInt8());
+	}
+
+	@Override
+	public void setWhiteBalance(Color iColor, int iSegment) {
+		mClient.out().writeUInt8(Cmd.SET_WHITE_BALANCE.ordinal());
+		addColor(mClient.out(),iColor);
+		mClient.out().writeInt8(iSegment);
+		mClient.sendActionRequest();	
+	}
+
+	@Override
+	public void persistWhiteBalance(int iSegment) {
+		mClient.out().writeUInt8(Cmd.PERSIST_WHITE_BALANCE.ordinal());
+		mClient.out().writeInt8(iSegment);
+		mClient.sendActionRequest();			
+	}
 
 }

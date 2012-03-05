@@ -13,5 +13,13 @@ public interface IRgbScreen {
 	public void fill(Color iColor);
 
 	public void repaint();
+	
+	public int numberOfSegments();
+
+    public Color whiteBalance(int iSegment);
+
+    public void setWhiteBalance(Color iColor, int iSegment);
+
+    public void persistWhiteBalance(int iSegment);
 
 }

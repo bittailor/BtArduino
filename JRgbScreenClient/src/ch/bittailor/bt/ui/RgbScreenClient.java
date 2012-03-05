@@ -1,9 +1,6 @@
 package ch.bittailor.bt.ui;
 
 import java.awt.Color;
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
 
 import ch.bittailor.bt.com.ConnectionFactory;
 import ch.bittailor.bt.com.TcpRequestClient;
@@ -25,13 +22,13 @@ public class RgbScreenClient {
 				Color.YELLOW,
 				Color.MAGENTA,
 				Color.ORANGE,
-				Color.WHITE,
 				Color.PINK,
-				Color.CYAN};
+				Color.CYAN,
+				Color.WHITE};
 		
 		
 		
-		for (int i = 0; i < 200 ; i++) {			
+		for (int i = 0; i < 1 ; i++) {			
 			System.out.println(i);
 			
 			for (Color color : colors) {
@@ -53,7 +50,7 @@ public class RgbScreenClient {
 
 	public static void main(String[] args) {
 		
-		for (int i = 0; i < 100 ; i++) {
+		for (int i = 0; i < 1 ; i++) {
 			System.out.println("Loop " + i);		
 			try {
 				final ConnectionFactory connectionFactory = new ConnectionFactory("192.168.2.2",2000);	

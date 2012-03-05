@@ -42,10 +42,16 @@ class StaticArrayPackageBuffer : public I_PackageBuffer
       }
 
       virtual int16_t get() {
-         if (mGetPosition < SIZE) {
-            return mData[mGetPosition++];
+         if (mGetPosition >= SIZE) {
+            return EOF;
          }
-         return EOF;
+
+         if (mGetPosition >= mPutPosition) {
+            return EOF;
+         }
+
+
+         return mData[mGetPosition++];
       }
 
       virtual size_t length() const {

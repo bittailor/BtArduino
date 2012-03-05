@@ -16,6 +16,8 @@
 #include "Bt/Com/BinaryInputPackage.hpp"
 #include "Bt/Com/BinaryOutputPackage.hpp"
 
+#include "Bt/Ui/RemoteRgbScreenProtocol.hpp"
+
 using namespace ::testing;
 
 namespace Bt {
@@ -60,7 +62,7 @@ TEST_F(RgbScreenProxyTest, setPixel) {
    mRgbScreenProxy.setPixel(x,y,color);
 
    EXPECT_EQ(6,mOutBuffer.length());
-   EXPECT_EQ(static_cast<uint8_t>(RgbScreenProxy::SET_PIXEL),mOutBuffer.raw()[0]);
+   EXPECT_EQ(static_cast<uint8_t>(RemoteRgbScreenProtocol::SET_PIXEL),mOutBuffer.raw()[0]);
    EXPECT_EQ(7,mOutBuffer.raw()[1]);
    EXPECT_EQ(6,mOutBuffer.raw()[2]);
    EXPECT_EQ(60,mOutBuffer.raw()[3]);
@@ -82,7 +84,7 @@ TEST_F(RgbScreenProxyTest, width) {
    size_t widthResult = mRgbScreenProxy.width();
 
    EXPECT_EQ(1,mOutBuffer.length());
-   EXPECT_EQ(static_cast<uint8_t>(RgbScreenProxy::WIDTH),mOutBuffer.raw()[0]);
+   EXPECT_EQ(static_cast<uint8_t>(RemoteRgbScreenProtocol::WIDTH),mOutBuffer.raw()[0]);
    EXPECT_EQ(width,widthResult);
 
 }

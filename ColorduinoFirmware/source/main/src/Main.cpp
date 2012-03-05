@@ -31,7 +31,7 @@ void drawAddress(uint8_t iAddress, Bt::Ui::I_RgbScreen& iScreen, const Bt::Ui::C
 int main() {
    init();
 
-   //Serial.begin(9600);
+//   Serial.begin(9600);
 
    uint8_t address = 1;
 
@@ -40,7 +40,7 @@ int main() {
    Bt::Ui::Color green (  0,255,  0);
    Bt::Ui::Color black (  0,  0,  0);
 
-   Bt::Ui::Colorduino colorduino;
+   Bt::Ui::Colorduino colorduino(1);
    colorduino.fill(red);
    colorduino.repaint();
    Bt::Ui::RgbScreenServer server(colorduino);

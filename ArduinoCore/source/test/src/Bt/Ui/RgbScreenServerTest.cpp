@@ -18,6 +18,7 @@
 #include "Bt/Com/StaticArrayPackageBuffer.hpp"
 #include "Bt/Com/BinaryInputPackage.hpp"
 #include "Bt/Com/BinaryOutputPackage.hpp"
+#include "Bt/Ui/RemoteRgbScreenProtocol.hpp"
 
 using namespace ::testing;
 
@@ -83,7 +84,7 @@ TEST_F(RgbScreenServerTest, testSetPixelViaMockStreams) {
 */
 
 TEST_F(RgbScreenServerTest, testSetPixelViaBinaryStreams) {
-   uint8_t command = RgbScreenProxy::SET_PIXEL;
+   uint8_t command = RemoteRgbScreenProtocol::SET_PIXEL;
    uint8_t x = 7;
    uint8_t y = 6;
    Color color(60,70,80);
@@ -98,7 +99,7 @@ TEST_F(RgbScreenServerTest, testSetPixelViaBinaryStreams) {
 }
 
 TEST_F(RgbScreenServerTest, testWidthViaBinaryStreams) {
-   uint8_t command = RgbScreenProxy::WIDTH;
+   uint8_t command = RemoteRgbScreenProtocol::WIDTH;
    uint8_t width = 5;
 
    Com::BinaryOutputPackage out(mInBuffer);
