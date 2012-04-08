@@ -8,19 +8,13 @@ public class TcpRequestClient implements IRequestClient {
 	static final int TCP_SERVER_START_REQUEST = 0xAF;
 	static final int TCP_SERVER_QUIT = 0xAA;
 	
-	
-	
-
-	
-	private IConnection mConnection;
-	
+	private IConnection mConnection;	
 	private PackageBuffer mOutputBuffer;
 	private IOutputPackage mOutputPackage;
 	private PackageBuffer mInputBuffer;
 	private IInputPackage mInputPackage;
 	
-	
-	
+		
 	public TcpRequestClient(IConnectionFactory iConnectionFactory) {
 		mConnection = iConnectionFactory.createConnection();
 		mOutputBuffer = new PackageBuffer(TCP_SERVER_BUFFER_LENGHT);
@@ -29,6 +23,15 @@ public class TcpRequestClient implements IRequestClient {
 		mInputPackage = new BinaryInputPackage(mInputBuffer);
 	}
 
+	public TcpRequestClient(IConnection iConnection) {
+		mConnection = iConnection;
+		mOutputBuffer = new PackageBuffer(TCP_SERVER_BUFFER_LENGHT);
+		mOutputPackage = new BinaryOutputPackage(mOutputBuffer);
+		mInputBuffer = new PackageBuffer(TCP_SERVER_BUFFER_LENGHT);
+		mInputPackage = new BinaryInputPackage(mInputBuffer);
+	}
+
+	
 	@Override
 	public IOutputPackage out() {
 		return mOutputPackage;

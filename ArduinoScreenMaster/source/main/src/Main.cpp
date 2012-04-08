@@ -25,11 +25,14 @@
 #include <EthernetClient.h>
 
 #include <Arduino.h>
+#include <SD.h>
 
 //-------------------------------------------------------------------------------------------------
 
 // 3s for the I2C slaves to start
 #define STARTUP_DELAY 3000UL
+
+#define SD_CARD_CHIP_SELECT 4
 
 #define HEARTBEAT_LED_PIN 9
 #define HEARTBEAT_PERIOD 500000UL
@@ -48,29 +51,29 @@ int main() {
 
    init();
 
-   Serial.begin(9600);
-
    delay(STARTUP_DELAY);
+
+   //SD.begin(SD_CARD_CHIP_SELECT);
 
    // I2C slaves
    Bt::Com::Twi twi;
-   Bt::Com::TwoWireClient<Bt::Com::Twi> server1(twi,1);
+   // Bt::Com::TwoWireClient<Bt::Com::Twi> server1(twi,1);
    Bt::Com::TwoWireClient<Bt::Com::Twi> server2(twi,2);
    Bt::Com::TwoWireClient<Bt::Com::Twi> server3(twi,3);
    Bt::Com::TwoWireClient<Bt::Com::Twi> server4(twi,4);
 
    // I2C led matrix proxies
-   Bt::Ui::RgbScreenProxy proxy1(server1);
+   // Bt::Ui::RgbScreenProxy proxy1(server1);
    Bt::Ui::RgbScreenProxy proxy2(server2);
    Bt::Ui::RgbScreenProxy proxy3(server3);
    Bt::Ui::RgbScreenProxy proxy4(server4);
 
    // Combine led matrixes to compund screen
-   Bt::Util::StaticMatrix<Bt::Ui::I_RgbScreen*,2,2> screens;
-   screens(0,0) = &proxy1;
+   Bt::Util::StaticMatrix<Bt::Ui::I_RgbScreen*,1,3> screens;
+   //screens(0,0) = &proxy1;
+   screens(0,0) = &proxy3;
    screens(0,1) = &proxy2;
-   screens(1,0) = &proxy3;
-   screens(1,1) = &proxy4;
+   screens(0,2) = &proxy4;
    Bt::Ui::CompoundRgbScreen screen(screens);
    screen.fill(RED);
    screen.repaint();

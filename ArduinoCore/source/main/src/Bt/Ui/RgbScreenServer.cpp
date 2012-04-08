@@ -53,13 +53,13 @@ void RgbScreenServer::handleRequest(Com::I_InputPackage& iIn, Com::I_OutputPacka
          oOut << static_cast<uint8_t>(mScreen->numberOfSegments());
       } break;
       case RemoteRgbScreenProtocol::WHITE_BALANCE : {
-         oOut << mScreen->whiteBalance(iIn.readInt8());
+         oOut << mScreen->whiteBalance(iIn.readUInt8());
       } break;
       case RemoteRgbScreenProtocol::SET_WHITE_BALANCE : {
          setWhiteBalance(iIn,oOut);
       } break;
       case RemoteRgbScreenProtocol::PERSIST_WHITE_BALANCE : {
-         mScreen->persistWhiteBalance(iIn.readInt8());
+         mScreen->persistWhiteBalance(iIn.readUInt8());
       } break;
       default : {
       } break;

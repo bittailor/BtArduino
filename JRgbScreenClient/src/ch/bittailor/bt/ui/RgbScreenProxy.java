@@ -106,7 +106,7 @@ public class RgbScreenProxy implements IRgbScreen {
 	@Override
 	public Color whiteBalance(int iSegment) {
 		mClient.out().writeUInt8(Cmd.WHITE_BALANCE.ordinal());
-		mClient.out().writeInt8(iSegment); 
+		mClient.out().writeUInt8(iSegment); 
 		mClient.sendQueryRequest();
 		return new Color(mClient.in().readUInt8(),mClient.in().readUInt8(),mClient.in().readUInt8());
 	}
@@ -115,14 +115,14 @@ public class RgbScreenProxy implements IRgbScreen {
 	public void setWhiteBalance(Color iColor, int iSegment) {
 		mClient.out().writeUInt8(Cmd.SET_WHITE_BALANCE.ordinal());
 		addColor(mClient.out(),iColor);
-		mClient.out().writeInt8(iSegment);
+		mClient.out().writeUInt8(iSegment);
 		mClient.sendActionRequest();	
 	}
 
 	@Override
 	public void persistWhiteBalance(int iSegment) {
 		mClient.out().writeUInt8(Cmd.PERSIST_WHITE_BALANCE.ordinal());
-		mClient.out().writeInt8(iSegment);
+		mClient.out().writeUInt8(iSegment);
 		mClient.sendActionRequest();			
 	}
 

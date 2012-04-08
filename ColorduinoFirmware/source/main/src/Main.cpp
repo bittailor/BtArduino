@@ -33,7 +33,7 @@ int main() {
 
 //   Serial.begin(9600);
 
-   uint8_t address = 1;
+   uint8_t address = 3;
 
    Bt::Ui::Color red   (255,  0,  0);
    Bt::Ui::Color orange(238,154,  0);
