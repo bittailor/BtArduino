@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="MacRoman" standalone="no"?>
+<jardesc>
+    <jar path="/Users/bittailor/Documents/code/BtArduino/CiMatrixServer.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/JRgbScreenClient/CreateJar.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" mainClassHandleIdentifier="=JRgbScreenClient/src&lt;ch.bittailor.bt.ci.server{ServerMain.java[ServerMain" manifestLocation="" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <file path="/JRgbScreenClient/.classpath"/>
+        <file path="/JRgbScreenClient/.project"/>
+        <javaElement handleIdentifier="=JRgbScreenClient/test"/>
+        <javaElement handleIdentifier="=JRgbScreenClient/src"/>
+        <folder path="/JRgbScreenClient/lib"/>
+    </selectedElements>
+</jardesc>

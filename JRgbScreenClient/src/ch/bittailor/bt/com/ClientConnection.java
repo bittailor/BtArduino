@@ -17,6 +17,7 @@ public class ClientConnection implements IConnection {
 	public ClientConnection(Socket iSocket) {
 		try {
 			mSocket = iSocket;
+			mSocket.setSoTimeout(5000);
 			mSocket.setTcpNoDelay(true);
 			mOutput = new BufferedOutputStream(mSocket.getOutputStream());
 			mInput = mSocket.getInputStream();
@@ -52,5 +53,12 @@ public class ClientConnection implements IConnection {
 			throw new RuntimeException("Connection Problem",e);
 		}
 	}
+
+	@Override
+	public boolean isClosed() {
+		return mSocket.isClosed();
+	}
+	
+	
 
 }

@@ -26,7 +26,7 @@ public class PackageBuffer implements IPackageBuffer {
 	@Override
 	public int get() {
 		if (mGetPosition < mData.length) {
-			return mData[mGetPosition++];
+			return mData[mGetPosition++] & 0xff;
 		}
 		return -1;
 	}

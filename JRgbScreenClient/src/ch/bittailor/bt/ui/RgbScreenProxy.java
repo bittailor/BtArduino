@@ -7,7 +7,7 @@ import ch.bittailor.bt.com.IRequestClient;
 
 public class RgbScreenProxy implements IRgbScreen {
 
-	enum Cmd {
+	public enum Cmd {
 		WIDTH,
         HEIGHT,
         SET_PIXEL,
@@ -31,6 +31,12 @@ public class RgbScreenProxy implements IRgbScreen {
 		mWidth = 0;
 		mHeight = 0;
 	}
+
+	@Override
+	public boolean isDisposed() {
+		return mClient.isDisposed();
+	}
+
 
 	/* (non-Javadoc)
 	 * @see ch.bittailor.bt.ui.IRgbScreen#width()

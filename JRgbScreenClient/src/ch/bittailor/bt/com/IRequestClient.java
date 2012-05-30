@@ -19,4 +19,6 @@ public interface IRequestClient {
     
 	public void close();
 	
+	public boolean isDisposed();
+	
 }

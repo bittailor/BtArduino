@@ -17,6 +17,7 @@ public class Connection implements IConnection {
 	public Connection(String iHost, int iPort) {
 		try {
 			mSocket = new Socket(iHost, iPort);
+			mSocket.setSoTimeout(5000);
 			mSocket.setTcpNoDelay(true);
 			mOutput = new BufferedOutputStream(mSocket.getOutputStream());
 			mInput = mSocket.getInputStream();
@@ -51,6 +52,11 @@ public class Connection implements IConnection {
 			e.printStackTrace();
 			throw new RuntimeException("Connection Problem",e);
 		}
+	}
+	
+	@Override
+	public boolean isClosed() {
+		return mSocket.isClosed();
 	}
 
 }

@@ -41,6 +41,11 @@ public class VirtualRgbScreen extends JPanel implements IRgbScreen, MouseListene
 		
 	}
 	
+	@Override
+	public boolean isDisposed() {
+		return false;
+	}
+
 	/* (non-Javadoc)
 	 * @see ch.bittailor.bt.ui.IRgbScreenPanel#addListener(java.awt.event.MouseListener)
 	 */

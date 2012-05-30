@@ -2,6 +2,7 @@ package ch.bittailor.bt.ui;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class RgbScreenMultiplexer implements IRgbScreen {
@@ -25,6 +26,15 @@ public class RgbScreenMultiplexer implements IRgbScreen {
 		mScreens = new ArrayList<IRgbScreen>();
 	}
 	
+	
+	
+	@Override
+	public boolean isDisposed() {
+		return false;
+	}
+
+
+
 	void add(IRgbScreen screen) {
 		for (int x = 0; x < mData.length; x++) {
 			for (int y = 0; y < mData[x].length; y++) {
@@ -51,6 +61,8 @@ public class RgbScreenMultiplexer implements IRgbScreen {
 
 	@Override
 	public void setPixel(int iX, int iY, Color iColor) {
+		check();
+		mData[iX][iY] = iColor;
 		for (IRgbScreen screen : mScreens) {
 			screen.setPixel(iX, iY, iColor);
 		}
@@ -58,6 +70,12 @@ public class RgbScreenMultiplexer implements IRgbScreen {
 
 	@Override
 	public void fill(Color iColor) {
+		check();
+		for (int x = 0; x < mData.length; x++) {
+			for (int y = 0; y < mData[x].length; y++) {
+				mData[x][y] = iColor;
+			}
+		}
 		for (IRgbScreen screen : mScreens) {
 			screen.fill(iColor);
 		}
@@ -66,6 +84,7 @@ public class RgbScreenMultiplexer implements IRgbScreen {
 
 	@Override
 	public void repaint() {
+		check();
 		for (IRgbScreen screen : mScreens) {
 			screen.repaint();
 		}
@@ -93,4 +112,14 @@ public class RgbScreenMultiplexer implements IRgbScreen {
 		// TODO to implement 		
 	}
 
+	private void check() {		
+		for (Iterator<IRgbScreen> iterator = mScreens.iterator(); iterator.hasNext();) {
+			IRgbScreen screen = iterator.next();
+			if (screen.isDisposed()) {
+				iterator.remove();
+			}
+			
+		}
+	}
+	
 }

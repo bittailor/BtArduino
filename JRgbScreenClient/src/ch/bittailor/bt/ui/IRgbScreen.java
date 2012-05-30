@@ -3,6 +3,8 @@ package ch.bittailor.bt.ui;
 import java.awt.Color;
 
 public interface IRgbScreen {
+	
+	public boolean isDisposed();
 
 	public int width();
 

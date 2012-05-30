@@ -32,6 +32,12 @@ public class TcpRequestClient implements IRequestClient {
 	}
 
 	
+	
+	@Override
+	public boolean isDisposed() {
+		return mConnection.isClosed();
+	}
+
 	@Override
 	public IOutputPackage out() {
 		return mOutputPackage;
@@ -50,6 +56,7 @@ public class TcpRequestClient implements IRequestClient {
 			receive();
 		} catch (IOException e) {
 			e.printStackTrace();
+			mConnection.close();
 		}
 	}
 	
@@ -61,6 +68,7 @@ public class TcpRequestClient implements IRequestClient {
 			receive();
 		} catch (IOException e) {
 			e.printStackTrace();
+			mConnection.close();
 		}
 	}
 	
@@ -95,7 +103,7 @@ public class TcpRequestClient implements IRequestClient {
 		int checkByte = mConnection.getInputStream().read();
 		if ( checkByte != TCP_SERVER_START_REQUEST) {
 			System.out.println("wrong check byte " + checkByte + " != " + TCP_SERVER_START_REQUEST);
-			throw new RuntimeException("wrong check byte " + checkByte + " != " + TCP_SERVER_START_REQUEST);
+			throw new IOException("wrong check byte " + checkByte + " != " + TCP_SERVER_START_REQUEST);
 		}
 
 		int length = mConnection.getInputStream().read();

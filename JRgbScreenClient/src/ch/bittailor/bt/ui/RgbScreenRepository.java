@@ -1,16 +1,20 @@
 package ch.bittailor.bt.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 public class RgbScreenRepository implements IRgbScreenRepository {
 
 	private ExecutorService mExecutorService;
-	private Map<String, List<IRgbScreen>> mScreens = new HashMap<String, List<IRgbScreen>>();
+	private RgbScreenMultiplexer mMultiplexer;
 	
+	public RgbScreenRepository(int iWidth, int iHeight, ExecutorService iExecutorService) {
+		mExecutorService = iExecutorService;
+		mMultiplexer = new RgbScreenMultiplexer(iWidth,iHeight);
+	}
+
+	public IRgbScreen getMasterScreen() {
+		return mMultiplexer;
+	}
 	
 	@Override
 	public void insert(final IRgbScreen iScreen) {
@@ -19,16 +23,13 @@ public class RgbScreenRepository implements IRgbScreenRepository {
 			@Override
 			public void run() {
 				// TODO fix constant project name
-				insertScreen("trunk",iScreen);
+				insertScreen(iScreen);
 			}
 		});
 	}
 	
-	private synchronized void insertScreen(String iProject, IRgbScreen iScreen ) {
-		if (!mScreens.containsKey(iProject)) {
-			mScreens.put(iProject, new ArrayList<IRgbScreen>());
-		}
-		mScreens.get(iProject).add(iScreen);
+	private synchronized void insertScreen(IRgbScreen iScreen ) {
+		mMultiplexer.add(iScreen);
 	}
 
 }

@@ -18,9 +18,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import ch.bittailor.bt.com.ConnectionFactory;
-import ch.bittailor.bt.com.TcpRequestClient;
-
 public class VirtualColorUi extends JFrame implements ChangeListener {
 
 	private static final long serialVersionUID = 1L;
@@ -151,14 +148,14 @@ public class VirtualColorUi extends JFrame implements ChangeListener {
 		SwingUtilities.invokeLater(new Runnable() {
 		    public void run() {
 		        
-		    	RgbScreenMultiplexer screen = new RgbScreenMultiplexer(24,8);
+		    	RgbScreenMultiplexer screen = new RgbScreenMultiplexer(16,16);
 		    	
-		    	ConnectionFactory connectionFactory = new ConnectionFactory("192.168.2.2",2000);	
-				TcpRequestClient requestClient = new TcpRequestClient(connectionFactory);
-				RgbScreenProxy remoteScreen = new RgbScreenProxy(requestClient);	
-				screen.add(remoteScreen);
+//		    	ConnectionFactory connectionFactory = new ConnectionFactory("192.168.2.2",2000);	
+//				TcpRequestClient requestClient = new TcpRequestClient(connectionFactory);
+//				RgbScreenProxy remoteScreen = new RgbScreenProxy(requestClient);	
+//				screen.add(remoteScreen);
 
-				VirtualRgbScreen virtualScreen = new VirtualRgbScreen(24,8);
+				VirtualRgbScreen virtualScreen = new VirtualRgbScreen(16,16);
 		    	screen.add(virtualScreen);
 		        
 		        
