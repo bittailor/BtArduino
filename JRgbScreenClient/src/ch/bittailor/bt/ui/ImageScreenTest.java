@@ -17,8 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
-import ch.bittailor.bt.com.ConnectionFactory;
-import ch.bittailor.bt.com.TcpRequestClient;
 
 public class ImageScreenTest {
 
@@ -136,12 +134,21 @@ public class ImageScreenTest {
 		for (int i = 0; i < 1 ; i++) {
 			System.out.println("Loop " + i);		
 			try {
-				final ConnectionFactory connectionFactory = new ConnectionFactory("192.168.2.2",2000);							
-				TcpRequestClient requestClient = new TcpRequestClient(connectionFactory);
-				RgbScreenProxy screen = new RgbScreenProxy(requestClient);		
-				ImageScreen imageScreen = new ImageScreen(screen);
+				
+				VirtualRgbScreen virtualScreen = new VirtualRgbScreen(16,16);
+				
+				//final ConnectionFactory connectionFactory = new ConnectionFactory("192.168.2.2",2000);							
+				//TcpRequestClient requestClient = new TcpRequestClient(connectionFactory);
+				//RgbScreenProxy screen = new RgbScreenProxy(requestClient);		
+				ImageScreen imageScreen = new ImageScreen(virtualScreen);
 				draw(imageScreen);
-				requestClient.close();
+				
+				 JFrame frame = new JFrame();
+			    	frame.getContentPane().add(virtualScreen);
+			    	frame.pack();
+			    	frame.setVisible(true);
+				
+				//requestClient.close();
 				System.out.print("Sleep ...");
 				Thread.sleep(1000);
 				System.out.println("... done");

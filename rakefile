@@ -7,7 +7,7 @@ task :cleanup do
 end
 
 task :build do 
-	system("bjam -j8 ArduinoUno HostUnitTest")
+	system("bjam -j8 -d2 ArduinoUno HostUnitTest")
 end
 
 task :rebuild => [ :cleanup , :build ] 

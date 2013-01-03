@@ -1,0 +1,9 @@
+
+project NightLight 
+	: build-dir target 
+	: 
+	;
+
+use-project /NightLight/main : source/main ;
+
+build-project source/main ;

@@ -1,0 +1,11 @@
+
+project NightLight/main 
+	: source-location src	 
+	: requirements <include>inc <include>src
+	: usage-requirements <include>inc 
+	;
+
+
+
+exe NightLight   : [ glob-tree *.cpp ] /ArduinoCore/main//ArduinoCore : <toolset>avr ;
+alias NightLight ;

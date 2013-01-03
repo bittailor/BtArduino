@@ -47,6 +47,6 @@ public class ServerMain {
 					throwable.printStackTrace();
 				}
 			}
-		}, 0, 1, TimeUnit.SECONDS);
+		}, 0, 10, TimeUnit.SECONDS);
 	}
 }

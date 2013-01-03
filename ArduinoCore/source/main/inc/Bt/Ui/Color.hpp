@@ -29,6 +29,13 @@ class Color
       : mRed(iRed), mGreen(iGreen), mBlue(iBlue) {
       }
 
+      explicit Color(uint32_t iRgb)
+      : mRed(0), mGreen(0), mBlue(0) {
+         mRed = (iRgb >> 16) & 0xFF;
+         mGreen = (iRgb >> 8) & 0xFF;
+         mBlue = iRgb & 0xFF;
+      }
+
       explicit Color(Com::I_InputPackage& iIn)
       : mRed(0), mGreen(0), mBlue(0) {
          iIn >> mRed >> mGreen >> mBlue;

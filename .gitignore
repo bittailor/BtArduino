@@ -3,6 +3,7 @@
 ArduinoCore/target
 ArduinoScreenMaster/target
 ColorduinoFirmware/target
+NightLight/target
 
 ArduinoCppUTest
 ArduinoLite

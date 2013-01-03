@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>ArduinoCore</name>
+	<name>NightLight</name>
 	<comment></comment>
 	<projects>
-		<project>ArduinoLibrary</project>
+		<project>ArduinoCore</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -27,7 +27,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildArguments</key>
-					<value>-j8 avr ArduinoUno</value>
+					<value>-j2 avr ArduinoUno</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildCommand</key>

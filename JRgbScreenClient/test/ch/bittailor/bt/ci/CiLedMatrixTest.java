@@ -2,9 +2,7 @@ package ch.bittailor.bt.ci;
 
 import static org.easymock.EasyMock.createControl;
 import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
 
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +10,6 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import org.easymock.IMocksControl;
-import org.junit.Test;
-
-import ch.bittailor.bt.ui.ImageScreen;
 import ch.bittailor.bt.ui.VirtualRgbScreen;
 
 public class CiLedMatrixTest {
