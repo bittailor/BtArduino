@@ -20,6 +20,7 @@ namespace Io {
 class CapacitiveSensorInput : public I_RawInput<bool>
 {
    public:
+
       CapacitiveSensorInput(uint8_t iSendPin,
                             uint8_t iReceivePin,
                             long iHighThreshold,

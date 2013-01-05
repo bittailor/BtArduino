@@ -11,14 +11,18 @@
 #ifndef INC__ImageRepository__hpp
 #define INC__ImageRepository__hpp
 
+#include "Image.hpp"
 
 class ImageRepository 
 {
    public:
+      static Image& getImage(size_t iIndex);
+
+   private:
+      // Constructor to prohibit construction.
       ImageRepository();
       ~ImageRepository();
-   
-   private:
+
    	  // Constructor to prohibit copy construction.
       ImageRepository(const ImageRepository&);
 

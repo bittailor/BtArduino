@@ -19,6 +19,7 @@ class Image
    public:
 
       enum { SIZE = 16 };
+      typedef const uint32_t (*RawImage)[SIZE];
 
       Image(const uint32_t iRawData[][SIZE]);
       ~Image();
@@ -26,14 +27,7 @@ class Image
       void draw(Bt::Ui::I_RgbScreen& pScreen);
    
    private:
-   	  // Constructor to prohibit copy construction.
-      Image(const Image&);
-
-      // Operator= to prohibit copy assignment
-      Image& operator=(const Image&);
-
-      const uint32_t (*mRawData)[16];
-      //const uint32_t mRawData[][SIZE];
+      RawImage mRawData;
 };
 
 

@@ -15,6 +15,8 @@
 
 #include "Image.hpp"
 
+
+namespace {
 //*************************************************************************************************
 
 extern const uint32_t STAR[Image::SIZE][Image::SIZE] PROGMEM;
@@ -183,17 +185,16 @@ const uint32_t ANGEL[Image::SIZE][Image::SIZE] =
 
 //*************************************************************************************************
 
-//-------------------------------------------------------------------------------------------------
+static Image sImages[] = {
+         Image(STAR),
+         Image(TRUCK),
+         Image(ANGEL),
+         Image(CAR3)
+};
 
-ImageRepository::ImageRepository() {
+} // namespace
 
+Image& ImageRepository::getImage(size_t iIndex) {
+   return sImages[iIndex];
 }
-
-//-------------------------------------------------------------------------------------------------
-
-ImageRepository::~ImageRepository() {
-
-}
-
-//-------------------------------------------------------------------------------------------------
 

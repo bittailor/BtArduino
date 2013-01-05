@@ -10,7 +10,7 @@
 
 #include "Image.hpp"
 
-
+#include <avr/pgmspace.h>
 
 //-------------------------------------------------------------------------------------------------
 
@@ -22,6 +22,17 @@ Image::Image(const uint32_t iRawData[][SIZE]) : mRawData(iRawData) {
 
 Image::~Image() {
 
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void Image::draw(Bt::Ui::I_RgbScreen& pScreen) {
+   for(uint8_t x = 0; x < SIZE ; x++) {
+      for(uint8_t y = 0; y < SIZE ; y++) {
+         uint32_t rgb = pgm_read_dword(&(mRawData[x][y]));
+         pScreen.setPixel(x,y,Bt::Ui::Color(rgb));
+      }
+   }
 }
 
 //-------------------------------------------------------------------------------------------------
