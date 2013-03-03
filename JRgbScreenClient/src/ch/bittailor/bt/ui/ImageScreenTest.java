@@ -23,35 +23,56 @@ public class ImageScreenTest {
 
 	private static void draw(final ImageScreen iImageScreen) throws FontFormatException, IOException {
 		try {
+//			File iconFolder = new File(ImageScreenTest.class.getResource("icons").toURI());
+//			for ( String file : iconFolder.list()) {
+//				if (!file.endsWith(".png")) {
+//					continue;
+//				}
+//				System.out.println("draw " + file);
+//				iImageScreen.getScreen().fill(Color.black);
+//				iImageScreen.repaint();
+//				final BufferedImage icon = ImageIO.read(new File(iconFolder,file));
+//				iImageScreen.getGraphics().drawImage(icon, 0, 0, null);
+//				iImageScreen.repaint();
+//				
+//				SwingUtilities.invokeAndWait(new Runnable() {
+//					
+//					@Override
+//					public void run() {
+//						JFrame frame = new JFrame("Image");
+//						
+//						frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+//						frame.getContentPane().add(new JLabel(new ImageIcon(iImageScreen.getImage()),SwingConstants.CENTER));
+//						frame.getContentPane().add(new JLabel(new ImageIcon(icon),SwingConstants.CENTER));
+//						frame.pack();
+//						frame.setVisible(true);
+//						frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//					}
+//				});
+//				
+//				
+//			}
 			File iconFolder = new File(ImageScreenTest.class.getResource("icons").toURI());
-			for ( String file : iconFolder.list()) {
-				if (!file.endsWith(".png")) {
-					continue;
-				}
-				System.out.println("draw " + file);
-				iImageScreen.getScreen().fill(Color.black);
-				iImageScreen.repaint();
-				final BufferedImage icon = ImageIO.read(new File(iconFolder,file));
-				iImageScreen.getGraphics().drawImage(icon, 0, 0, null);
-				iImageScreen.repaint();
+			
+			final BufferedImage icon = ImageIO.read(new File(iconFolder,"navtruck.png"));
+			iImageScreen.getGraphics().drawImage(icon, 0, 0, null);
+			iImageScreen.repaint();
+			
+			SwingUtilities.invokeAndWait(new Runnable() {
 				
-				SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					JFrame frame = new JFrame("Image");
 					
-					@Override
-					public void run() {
-						JFrame frame = new JFrame("Image");
-						
-						frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-						frame.getContentPane().add(new JLabel(new ImageIcon(iImageScreen.getImage()),SwingConstants.CENTER));
-						frame.getContentPane().add(new JLabel(new ImageIcon(icon),SwingConstants.CENTER));
-						frame.pack();
-						frame.setVisible(true);
-						frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-					}
-				});
-				
-				
-			}
+					frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+					frame.getContentPane().add(new JLabel(new ImageIcon(iImageScreen.getImage()),SwingConstants.CENTER));
+					frame.getContentPane().add(new JLabel(new ImageIcon(icon),SwingConstants.CENTER));
+					frame.pack();
+					frame.setVisible(true);
+					frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				}
+			});
+			
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
