@@ -12,21 +12,34 @@ public class ImageToCode {
 	
 	public static void main(String[] args) throws URISyntaxException, IOException {
 		File iconFolder = new File(ImageScreenTest.class.getResource("icons").toURI());
-		String file = "SteamTrain.png";
-		BufferedImage icon = ImageIO.read(new File(iconFolder,file));
-		
-		for (int x = 0; x < icon.getWidth(); x++) {
-			System.out.print("{");
-			for (int y = 0; y < icon.getHeight(); y++) {
-//				Color pixel = new Color(icon.getRGB(x, y));
-//				System.out.print("Color("+pixel.getRed() + "," + pixel.getGreen() + "," + pixel.getBlue()+")");
-				System.out.print(icon.getRGB(x, y));
-				if (y < icon.getHeight()-1) {
-					System.out.print(",");
+		for (int i = 1; i < 7; i++) {
+			String file = "BtTrain" + i + ".png";
+			BufferedImage icon = ImageIO.read(new File(iconFolder,file));
+			System.out.println("");
+			System.out.println("//*************************************************************************************************");
+			System.out.println("");
+			System.out.println("extern const uint32_t BT_TRAIN_"+i+"[Image::SIZE][Image::SIZE] PROGMEM;");
+			System.out.println("const uint32_t BT_TRAIN_"+i+"[Image::SIZE][Image::SIZE] =");
+			System.out.println("{");
+			for (int x = 0; x < icon.getWidth(); x++) {
+				System.out.print("{");
+				for (int y = 0; y < icon.getHeight(); y++) {
+					System.out.print(icon.getRGB(x, y));
+					if (y < icon.getHeight()-1) {
+						System.out.print(",");
+					}
 				}
+				System.out.println("},");
 			}
-			System.out.println("},");
+			System.out.println("};");
 		}
+		
+		
+		
+		
+		
+		
+		
 		
 	}
 	
