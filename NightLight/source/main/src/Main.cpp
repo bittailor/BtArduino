@@ -20,6 +20,7 @@
 #include <Arduino.h>
 #include <new.h>
 #include <Bt/Io/DigitalInput.hpp>
+#include <Bt/Io/DigitalInputListener.hpp>
 #include <Bt/Workcycle/MainWorkcycle.hpp>
 
 #include "Settings.hpp"
@@ -40,20 +41,35 @@ class ImageScroller {
       : mCurrentIndex(0), mScreen(&iScreen) {
       }
 
-      void next() {
+
+
+
+      void next(bool iValue) {
+         if (!iValue) {
+            return;
+         }
+
+         uint8_t previousIndex = mCurrentIndex;
+
          mCurrentIndex++ ;
          if (mCurrentIndex >= ImageRepository::size()) {
             mCurrentIndex = 0;
          }
-         draw();
+         drawNext(previousIndex);
       }
 
-      void previous() {
+      void previous(bool iValue) {
+         if (!iValue) {
+            return;
+         }
+
+         uint8_t previousIndex = mCurrentIndex;
+
          if (mCurrentIndex <= 0) {
             mCurrentIndex = ImageRepository::size();
          }
          mCurrentIndex-- ;
-         draw();
+         drawPrevious(previousIndex);
       }
 
       void draw() {
@@ -61,38 +77,30 @@ class ImageScroller {
          mScreen->repaint();
       }
 
+      void drawNext(uint8_t iPreviousIndex) {
+         for(uint8_t x = 0; x < Image::SIZE ; x++) {
+            ImageRepository::getImage(iPreviousIndex).draw(*mScreen, 0, x, Image::SIZE-x);
+            ImageRepository::getImage(mCurrentIndex).draw(*mScreen, Image::SIZE-x, 0, x);
+            mScreen->repaint();
+         }
+         draw();
+      }
+
+      void drawPrevious(uint8_t iPreviousIndex) {
+         for(uint8_t x = 0; x < Image::SIZE ; x++) {
+            ImageRepository::getImage(iPreviousIndex).draw(*mScreen, x, 0, Image::SIZE-x);
+            ImageRepository::getImage(mCurrentIndex).draw(*mScreen, 0, Image::SIZE-x, x);
+            mScreen->repaint();
+         }
+         draw();
+      }
+
+
 
    private:
       uint8_t mCurrentIndex;
       Bt::Ui::I_RgbScreen* mScreen;
 };
-
-//-------------------------------------------------------------------------------------------------
-
-class ScrollListener : public Bt::Io::I_DigitalInputListener {
-
-   public:
-      typedef void (ImageScroller::*Function)();
-
-      ScrollListener(ImageScroller& iScroller, Function iFunction)
-      : mScroller(&iScroller), mFunction(iFunction) {
-      }
-
-      virtual void high() {
-         (mScroller->*mFunction)();
-      }
-
-      virtual void low() {
-      }
-
-   private:
-      ImageScroller* mScroller;
-      Function mFunction;
-
-};
-
-
-
 
 //-------------------------------------------------------------------------------------------------
 
@@ -149,8 +157,8 @@ int main() {
    Bt::Io::DigitalInput buttonNext(capacitiveInputNext);
    Bt::Io::DigitalInput buttonPrevious(capacitiveInputPrevious);
 
-   ScrollListener listenerNext(imageScroller, &ImageScroller::next);
-   ScrollListener listenerPrevious(imageScroller, &ImageScroller::previous);
+   Bt::Io::DigitalInputListener<ImageScroller> listenerNext(imageScroller, &ImageScroller::next);
+   Bt::Io::DigitalInputListener<ImageScroller> listenerPrevious(imageScroller, &ImageScroller::previous);
 
    buttonNext.add(listenerNext);
    buttonPrevious.add(listenerPrevious);

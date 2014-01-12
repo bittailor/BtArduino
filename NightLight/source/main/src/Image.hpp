@@ -24,7 +24,8 @@ class Image
       Image(const uint32_t iRawData[][SIZE]);
       ~Image();
 
-      void draw(Bt::Ui::I_RgbScreen& pScreen);
+      void draw(Bt::Ui::I_RgbScreen& iScreen);
+      void draw(Bt::Ui::I_RgbScreen& iScreen, uint8_t iOffset, uint8_t iStart, uint8_t iSize);
    
    private:
       RawImage mRawData;
