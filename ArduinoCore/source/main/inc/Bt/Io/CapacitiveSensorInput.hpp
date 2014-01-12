@@ -24,7 +24,8 @@ class CapacitiveSensorInput : public I_RawInput<bool>
       CapacitiveSensorInput(uint8_t iSendPin,
                             uint8_t iReceivePin,
                             long iHighThreshold,
-                            long iLowThreshold);
+                            long iLowThreshold,
+                            uint8_t iReadSamples = 255);
       ~CapacitiveSensorInput();
 
       virtual bool read();
@@ -40,6 +41,7 @@ class CapacitiveSensorInput : public I_RawInput<bool>
       const long mHighThreshold;
       const long mLowThreshold;
       bool mValue;
+      uint8_t mReadSamples;
 };
 
 } // namespace Io

@@ -16,6 +16,7 @@
 class ImageRepository 
 {
    public:
+      static size_t size();
       static Image& getImage(size_t iIndex);
 
    private:

@@ -32,27 +32,66 @@ static const Bt::Ui::Color BLACK     (  0,  0,  0);
 
 //-------------------------------------------------------------------------------------------------
 
-class DrawListener : public Bt::Io::I_DigitalInputListener {
+class ImageScroller {
 
    public:
 
-      DrawListener(uint8_t iIndex, Bt::Ui::I_RgbScreen& iScreen)
-      : mIndex(iIndex), mScreen(&iScreen) {
+      ImageScroller(Bt::Ui::I_RgbScreen& iScreen)
+      : mCurrentIndex(0), mScreen(&iScreen) {
+      }
+
+      void next() {
+         mCurrentIndex++ ;
+         if (mCurrentIndex >= ImageRepository::size()) {
+            mCurrentIndex = 0;
+         }
+         draw();
+      }
+
+      void previous() {
+         if (mCurrentIndex <= 0) {
+            mCurrentIndex = ImageRepository::size();
+         }
+         mCurrentIndex-- ;
+         draw();
+      }
+
+      void draw() {
+         ImageRepository::getImage(mCurrentIndex).draw(*mScreen);
+         mScreen->repaint();
+      }
+
+
+   private:
+      uint8_t mCurrentIndex;
+      Bt::Ui::I_RgbScreen* mScreen;
+};
+
+//-------------------------------------------------------------------------------------------------
+
+class ScrollListener : public Bt::Io::I_DigitalInputListener {
+
+   public:
+      typedef void (ImageScroller::*Function)();
+
+      ScrollListener(ImageScroller& iScroller, Function iFunction)
+      : mScroller(&iScroller), mFunction(iFunction) {
       }
 
       virtual void high() {
-         ImageRepository::getImage(mIndex).draw(*mScreen);
-         mScreen->repaint();
+         (mScroller->*mFunction)();
       }
 
       virtual void low() {
       }
 
    private:
-      uint8_t mIndex;
-      Bt::Ui::I_RgbScreen* mScreen;
+      ImageScroller* mScroller;
+      Function mFunction;
 
 };
+
+
 
 
 //-------------------------------------------------------------------------------------------------
@@ -96,25 +135,35 @@ int main() {
    Bt::Workcycle::MainWorkcycle workcycle;
 
 
-   Bt::Util::Vector<Bt::Io::CapacitiveSensorInput,NUMBER_OF_BUTTONS> capacitiveInputs;
-   Bt::Util::Vector<Bt::Io::DigitalInput,NUMBER_OF_BUTTONS> buttons;
-   Bt::Util::Vector<DrawListener,NUMBER_OF_BUTTONS> listeners;
+   ImageScroller imageScroller(screen[0]);
 
-   for(uint8_t i = 0 ; i < NUMBER_OF_BUTTONS ; i++ ) {
-      capacitiveInputs.pushBack(CAPACITIVE_SENSOR_SEND_PIN,
-                                CAPACITIVE_SENSOR_FIRST_RECEIVE_PIN+i,
-                                CAPACITIVE_SENSOR_HIGH_THRESHOLD,
-                                CAPACITIVE_SENSOR_LOW_THRESHOLD);
-      buttons.pushBack<Bt::Io::I_RawInput<bool>&>(capacitiveInputs[i]);
-      listeners.pushBack<uint8_t,Bt::Ui::I_RgbScreen&>(i, screen[0]);
-      buttons[i].add(listeners[i]);
-      workcycle.add(buttons[i]);
-   }
+   Bt::Io::CapacitiveSensorInput capacitiveInputNext(CAPACITIVE_SENSOR_SEND_PIN,
+                                                     CAPACITIVE_SENSOR_NEXT_RECEIVE_PIN,
+                                                     CAPACITIVE_SENSOR_HIGH_THRESHOLD,
+                                                     CAPACITIVE_SENSOR_LOW_THRESHOLD);
+   Bt::Io::CapacitiveSensorInput capacitiveInputPrevious(CAPACITIVE_SENSOR_SEND_PIN,
+                                                     CAPACITIVE_SENSOR_PREVIOUS_RECEIVE_PIN,
+                                                     CAPACITIVE_SENSOR_HIGH_THRESHOLD,
+                                                     CAPACITIVE_SENSOR_LOW_THRESHOLD);
+
+   Bt::Io::DigitalInput buttonNext(capacitiveInputNext);
+   Bt::Io::DigitalInput buttonPrevious(capacitiveInputPrevious);
+
+   ScrollListener listenerNext(imageScroller, &ImageScroller::next);
+   ScrollListener listenerPrevious(imageScroller, &ImageScroller::previous);
+
+   buttonNext.add(listenerNext);
+   buttonPrevious.add(listenerPrevious);
+
+   workcycle.add(buttonNext);
+   workcycle.add(buttonPrevious);
 
    screen[0].fill(BLACK);
    screen[0].repaint();
 
    Serial.println("s2");
+
+   imageScroller.draw();
 
    workcycle.run();
 

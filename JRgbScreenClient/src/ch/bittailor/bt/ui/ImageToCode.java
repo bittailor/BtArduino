@@ -12,7 +12,7 @@ public class ImageToCode {
 	
 	public static void main(String[] args) throws URISyntaxException, IOException {
 		File iconFolder = new File(ImageScreenTest.class.getResource("icons").toURI());
-		String file = "angel_sm.png";
+		String file = "SteamTrain.png";
 		BufferedImage icon = ImageIO.read(new File(iconFolder,file));
 		
 		for (int x = 0; x < icon.getWidth(); x++) {
